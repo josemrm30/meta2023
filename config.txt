@@ -1,0 +1,4 @@
+Files=ford01.dat ford02.dat ford03.dat ford04.dat
+Seeds=12345
+Algorithms=BestFirst
+OtherParameters=1
