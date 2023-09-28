@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 public class Main {
     static ArrayList<MatrixLoader> matrixs;
     static Configurator config;
+    static ExecutorService executor;
 
     public static void loadFiles(String[] args) {
         matrixs = new ArrayList<>();
@@ -42,11 +43,8 @@ public class Main {
         }
     }
 
-
-    public static void main(String[] args) throws IOException {
-        loadFiles(args);
-        printFiles();
-        ExecutorService executor = Executors.newCachedThreadPool();
+    public static void runAlgorithms() throws IOException{
+        executor = Executors.newCachedThreadPool();
 
         for (int i = 0; i < config.getAlgorithms().size(); i++) {
             for (MatrixLoader matrix : matrixs) {
@@ -71,5 +69,13 @@ public class Main {
                 }
             }
         }
+    }
+
+
+    public static void main(String[] args) throws IOException {
+        loadFiles(args);
+        printFiles();
+        runAlgorithms();
+
     }
 }
