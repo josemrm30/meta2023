@@ -66,4 +66,8 @@ public class MatrixLoader {
         }
         return str.toString();
     }
+
+    public String getName() {
+        return name;
+    }
 }
