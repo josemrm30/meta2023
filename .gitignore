@@ -87,6 +87,7 @@ out/
 .idea/vcs.xml
 .idea/workspace.xml
 PR1.iml
+log/
 
 ### Eclipse ###
 .apt_generated

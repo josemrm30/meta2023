@@ -8,6 +8,7 @@ public class Configurator {
     ArrayList<String> algorithms;
     ArrayList<Long> seeds;
     Integer extraParameter;
+    Boolean logs;
 
     public Configurator(String path) {
         files = new ArrayList<>();
@@ -45,6 +46,11 @@ public class Configurator {
                     case "OtherParameters":
                         extraParameter = Integer.parseInt(splited[1]);
                         break;
+                    case "Logs":
+                        logs = Boolean.parseBoolean(splited[1]);
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + splited[0]);
                 }
             }
 
