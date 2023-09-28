@@ -18,12 +18,12 @@ public class Main {
     }
 
     public static void printFiles() {
-        for (int i = 0; i < config.getFiles().size(); i++) {
-            System.out.println(matrixs.get(i).getName());
-            for (int j = 0; j < matrixs.get(i).getMatrix1().length; j++) {
-                System.out.println(Arrays.toString(matrixs.get(i).getMatrix1()[j]));
+        if (config.logs) {
+            System.out.println("TODO");
+        } else {
+            for (int i = 0; i < config.getFiles().size(); i++) {
+                System.out.println(matrixs.get(i).toString());
             }
-
         }
     }
 

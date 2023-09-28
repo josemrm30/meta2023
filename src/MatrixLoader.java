@@ -1,13 +1,15 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 
-// TODO: add javadoc and change matrix for arraylist
+// TODO: add javadoc
 public class MatrixLoader {
     private String name;
-git
+    private int matrix1[][];
     private int matrix2[][];
+
 
     public MatrixLoader(String filePath) {
         String line;
@@ -48,19 +50,20 @@ git
 
 
         } catch (IOException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int[][] getMatrix1() {
-        return matrix1;
-    }
-
-    public int[][] getMatrix2() {
-        return matrix2;
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder("Data filename: " + name + "\n" + "Matrix 1:" + "\n");
+        for (int[] ints : matrix1) {
+            str.append(Arrays.toString(ints)).append("\n");
+        }
+        str.append("Matrix 2:").append("\n");
+        for (int[] ints : matrix2) {
+            str.append(Arrays.toString(ints)).append("\n");
+        }
+        return str.toString();
     }
 }
