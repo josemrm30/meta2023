@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class Main {
     static ArrayList<MatrixLoader> matrixs;
     static Configurator config;
-
+    static ArrayList<Integer> solution;
     public static void loadFiles(String[] args) {
         matrixs = new ArrayList<>();
         config = new Configurator(args[0]);
@@ -15,7 +15,12 @@ public class Main {
             MatrixLoader loader = new MatrixLoader(config.getFiles().get(i));
             matrixs.add(loader);
         }
+        
+        
     }
+    
+   
+    
 
     public static void printFiles() {
         for (int i = 0; i < config.getFiles().size(); i++) {
@@ -31,6 +36,13 @@ public class Main {
     public static void main(String[] args) {
         loadFiles(args);
         printFiles();
+        
+        Solution sol = new Solution(args[args.length - 1]);
+        Greedy greedy = new Greedy();
+        
+        greedy.SoluGreedy(matrixs.get(0).getMatrix1(), matrixs.get(0).getMatrix2(),matrixs.get(0).getMatrixSize() , sol.getSolution());
+        
+        
         //localsearch.greedy();
         //printSolution();
     }

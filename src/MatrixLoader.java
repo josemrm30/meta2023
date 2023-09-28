@@ -6,8 +6,9 @@ import java.io.IOException;
 // TODO: add javadoc and change matrix for arraylist
 public class MatrixLoader {
     private String name;
-git
+    private int matrix1[][];
     private int matrix2[][];
+    private int matrixSize;
 
     public MatrixLoader(String filePath) {
         String line;
@@ -16,7 +17,7 @@ git
         try {
             f = new FileReader(filePath);
             BufferedReader b = new BufferedReader(f);
-            int matrixSize = Integer.parseInt(b.readLine());
+            matrixSize = Integer.parseInt(b.readLine());
             matrix1 = new int[matrixSize][matrixSize];
             matrix2 = new int[matrixSize][matrixSize];
             line = b.readLine();
@@ -50,6 +51,9 @@ git
         } catch (IOException e) {
             System.out.println(e);
         }
+    }
+    public int getMatrixSize(){
+        return matrixSize;
     }
 
     public String getName() {
