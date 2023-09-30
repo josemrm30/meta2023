@@ -37,11 +37,10 @@ public class Greedy {
         return pmajor;
     }
 
-    public void CreatePotentials(ArrayList<Integer> flowpot, ArrayList<Integer> dispot, int size, int flow[][], int loc[][]) {
+    public void CreatePotentials(ArrayList<Integer> flowPotential, ArrayList<Integer> distPotential, int size, int flow[][], int loc[][]) {
         for (int i = 0; i < size; i++) {
-
-            flowpot.add(0);
-            dispot.add(0);
+            flowPotential.add(0);
+            distPotential.add(0);
             for (int j = 0; j < size; j++) {
                 flowPotential.set(i, flowPotential.get(i) + flow[i][j]);
                 distPotential.set(i, distPotential.get(i) + loc[i][j]);
@@ -51,21 +50,43 @@ public class Greedy {
 
     }
 
-    public void SoluGreedy(int[][] flow, int[][] loc, int size, int [] s) {
-        int minord;
-        int majorf;
-        ArrayList<Integer> dispot = new ArrayList<>();
-        ArrayList<Integer> flowpot = new ArrayList<>();
+    public void SoluGreedy(int[][] flow, int[][] loc, int size, int[] s) {
+        int minorDist;
+        int majorFlow;
+        ArrayList<Integer> distPotential = new ArrayList<>();
+        ArrayList<Integer> flowPotential = new ArrayList<>();
 
 
-        CreatePotentials(flowpot, dispot, size, flow, loc);
+        CreatePotentials(flowPotential, distPotential, size, flow, loc);
 
         for (int i = 0; i < size; i++) {
-            majorf = majorFlow(flowpot, size);
-            minord = minorDist(dispot, size);
+            majorFlow = majorFlow(flowPotential, size);
+            minorDist = minorDist(distPotential, size);
 
-            s[majorf] = minord;
+            s[majorFlow] = minorDist + 1;
         }
+            int contador = 0;
+        for (int i = 0; i < size; i++) {
+            contador += flowPotential.get(i);
+        }
+        System.out.println(flowPotential.toString());
+        System.out.println(distPotential.toString());
+        System.out.println(Arrays.toString(s));
     }
+
+    int Cost(int []s,  int [][]flow , int [][] loc, int size){
+        int cost = 0;
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if(i!= j)
+                    cost += flow[i][j] * loc[s[i]][s[j]];
+            }
+        }
+        return cost;
+    }
+
+
+
 
 }

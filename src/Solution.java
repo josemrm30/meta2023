@@ -4,69 +4,51 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 
 /**
  * @author pedro
  */
 public class Solution {
-    
-    ArrayList<Integer> seeds;
-    int size;
-    ArrayList<Integer> solution;
+    private String name;
+    private int size;
+    private int cost;
+    private int[] solutionList;
 
-    public ArrayList<Integer> getSeeds() {
-        return seeds;
-    }
-    public int getSize() {
-        return size;
-    }
-
-    public ArrayList<Integer> getSolution() {
-        return solution;
-    }
-
-    public Solution(String path) {
-        solution = new ArrayList<>();
-        seeds = new ArrayList<>();
+    public void loadSolution(String filePath){
         String line;
         FileReader f = null;
+        name = filePath.split("\\.")[0];
         try {
-            f = new FileReader(path);
+
+            f = new FileReader(filePath);
             BufferedReader b = new BufferedReader(f);
-            int linenumb=0;
-            while ((line = b.readLine()) != null) {
-                try {
-                        if(linenumb == 0){
-                            String[] splited = line.split("  ");
-                            size = Integer.parseInt(splited[0]);
-                            String[] splitedSeed = line.split(" ");
-                            for(int i=0; i < size; i++){
-                                seeds.add(Integer.parseInt(splitedSeed[i]));
-                            }
 
-                    } else {
-                        String[] splitedSol = line.split(" ");
 
-                        for (int i = 0; i < size; i++) {
-                            solutionList[i] =Integer.parseInt(splitedSol[i]);
-                        }
-
-                    }
-
-                } catch (NumberFormatException ex) {
-
+            try {
+                line = b.readLine();
+                String[] splited = line.split(" ");
+                size = Integer.parseInt(splited[0]);
+                solutionList = new int[size];
+                System.out.println("Size: " + getSize());
+                String[] splitedCost = line.split(" ");
+                cost = (Integer.parseInt(splitedCost[1]));
+                line = b.readLine();
+                String[] splitedSol = line.split(" ");
+                for (int i = 0; i < size; i++) {
+                    solutionList[i] = Integer.parseInt(splitedSol[i]);
                 }
-                linenumb++;
 
+            } catch (NumberFormatException ex) {
+                System.err.println(ex);
             }
-
         } catch (IOException e) {
-            System.out.println(e);
+            System.err.println(e);
         }
+    }
+
+
+    public Solution(String filePath) {
+        loadSolution(filePath);
     }
 
     public String getName() {

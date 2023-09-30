@@ -14,6 +14,7 @@ public class Configurator {
         files = new ArrayList<>();
         seeds = new ArrayList<>();
         algorithms = new ArrayList<>();
+        solutions = new ArrayList<>();
 
         String line;
         FileReader f = null;

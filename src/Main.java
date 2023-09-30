@@ -37,10 +37,12 @@ public class Main {
         loadFiles(args);
         printFiles();
 
-        Solution sol = new Solution(config.getSolutions().get(0));
+        //Solution sol = new Solution(config.getSolutions().get(0));
         Greedy greedy = new Greedy();
 
-        greedy.SoluGreedy(matrixs.get(0).getMatrix1(), matrixs.get(0).getMatrix2(), matrixs.get(0).getMatrixSize(), sol.getSolutionList());
+        for (int i = 0; i < solutions.size(); i++) {
+            greedy.SoluGreedy(matrixs.get(i).getMatrix1(), matrixs.get(i).getMatrix2(), matrixs.get(i).getMatrixSize(), solutions.get(i).getSolutionList());
+        }
 
 
         //localsearch.greedy();
