@@ -29,7 +29,6 @@ public class Main {
             for (int j = 0; j < matrixs.get(i).getMatrix1().length; j++) {
                 System.out.println(Arrays.toString(matrixs.get(i).getMatrix1()[j]));
             }
-
         }
     }
 
@@ -38,7 +37,7 @@ public class Main {
         loadFiles(args);
         printFiles();
 
-        Solution sol = new Solution("ruta");
+        Solution sol = new Solution(config.getSolutions().get(0));
         Greedy greedy = new Greedy();
 
         greedy.SoluGreedy(matrixs.get(0).getMatrix1(), matrixs.get(0).getMatrix2(), matrixs.get(0).getMatrixSize(), sol.getSolutionList());

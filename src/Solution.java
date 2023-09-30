@@ -50,15 +50,17 @@ public class Solution {
 
                     } else {
                         String[] splitedSol = line.split(" ");
+
                         for (int i = 0; i < size; i++) {
                             solutionList[i] =Integer.parseInt(splitedSol[i]);
                         }
+
                     }
-                    linenumb++;
+
                 } catch (NumberFormatException ex) {
 
                 }
-
+                linenumb++;
 
             }
 

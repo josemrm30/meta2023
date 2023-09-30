@@ -20,7 +20,7 @@ public class Greedy {
             }
         }
 
-        vec.set(pminor, 99999);// marcamos poniendo un nmmero grande
+        vec.set(pminor, 99999);// marcamos poniendo un numero grande
         return pminor;
 
     }
@@ -33,7 +33,7 @@ public class Greedy {
             }
         }
 
-        vec.set(pmajor, -99999);// marcamos poniendo un nmmero pequeño
+        vec.set(pmajor, -99999);// marcamos poniendo un numero pequeño
         return pmajor;
     }
 
@@ -56,7 +56,7 @@ public class Greedy {
         int minord;
         int majorf;
         ArrayList<Integer> dispot = new ArrayList<>();
-        ArrayList<Integer> flowpot = new ArrayList<>(0);
+        ArrayList<Integer> flowpot = new ArrayList<>();
 
 
         CreatePotentials(flowpot, dispot, size, flow, loc);
