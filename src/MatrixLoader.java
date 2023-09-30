@@ -52,7 +52,8 @@ public class MatrixLoader {
             System.out.println(e);
         }
     }
-    public int getMatrixSize(){
+
+    public int getMatrixSize() {
         return matrixSize;
     }
 

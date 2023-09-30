@@ -43,11 +43,10 @@ public class Greedy {
             flowpot.add(0);
             dispot.add(0);
             for (int j = 0; j < size; j++) {
-                flowpot.add(flowpot.get(i) + flow[i][j]);
-                dispot.add(dispot.get(i) + loc[i][j]);
+                flowPotential.set(i, flowPotential.get(i) + flow[i][j]);
+                distPotential.set(i, distPotential.get(i) + loc[i][j]);
             }
-
-            System.out.println(flowpot.get(i) + " -- " + dispot.get(i));
+            System.out.println("flow " + flowPotential.get(i) + " -- " + "dist " + distPotential.get(i));
         }
 
     }
