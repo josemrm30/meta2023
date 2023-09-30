@@ -7,6 +7,7 @@ public class Configurator {
     ArrayList<String> files;
     ArrayList<String> algorithms;
     ArrayList<Long> seeds;
+    ArrayList<String> solutions;
     Integer extraParameter;
 
     public Configurator(String path) {
@@ -45,6 +46,13 @@ public class Configurator {
                     case "OtherParameters":
                         extraParameter = Integer.parseInt(splited[1]);
                         break;
+
+                    case "Solutions":
+                        String[] vSolutions = splited[1].split(" ");
+                        for (int i = 0; i < vSolutions.length; i++) {
+                            solutions.add(vSolutions[i]);
+                        }
+                        break;
                 }
             }
 
@@ -68,4 +76,7 @@ public class Configurator {
     public Integer getExtraParameter() {
         return extraParameter;
     }
+
+    public ArrayList<String> getSolutions() { return solutions; }
+
 }

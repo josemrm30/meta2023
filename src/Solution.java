@@ -10,7 +10,6 @@ import java.util.ArrayList;
  */
 
 /**
- *
  * @author pedro
  */
 public class Solution {
@@ -49,17 +48,18 @@ public class Solution {
                                 seeds.add(Integer.parseInt(splitedSeed[i]));
                             }
 
-                        }else{
-                            String[] splitedSol = line.split(" ");
-                            for(int i=0; i < size; i++){
-                                solution.add(Integer.parseInt(splitedSol[i]));
-                            }
+                    } else {
+                        String[] splitedSol = line.split(" ");
+                        for (int i = 0; i < size; i++) {
+                            solutionList[i] =Integer.parseInt(splitedSol[i]);
                         }
-                        linenumb++;
-                    } catch (NumberFormatException ex) {
-                        
                     }
-                
+                    linenumb++;
+                } catch (NumberFormatException ex) {
+
+                }
+
+
             }
 
         } catch (IOException e) {
@@ -67,6 +67,19 @@ public class Solution {
         }
     }
 
-    
-    
+    public String getName() {
+        return name;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public int[] getSolutionList() {
+        return solutionList;
+    }
 }
