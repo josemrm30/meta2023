@@ -11,33 +11,36 @@ import java.util.*;
 
 
 public class Greedy {
+    int[] mark;
 
-    public int minorDist(ArrayList<Integer> vec, int size) {
+    public int[] minorDist(ArrayList<Integer> vec,int []mark, int size) {
         int pminor = 0;
+        int[] prov = new int [size];
         for (int i = 0; i < size; i++) {
-            if (vec.get(i) < vec.get(pminor)) {
+            if (vec.get(i) < vec.get(pminor) && mark[i] == 0) {
                 pminor = i;
+                prov[i] = 1;
             }
         }
-
-        vec.set(pminor, 99999);// marcamos poniendo un numero grande
-        return pminor;
+        return prov;
 
     }
 
-    public int majorFlow(ArrayList<Integer> vec, int size) {
+    public int majorFlow(ArrayList<Integer> vec,int []mark,int []minordist, int size) {
         int pmajor = 0;
         for (int i = 0; i < size; i++) {
-            if (vec.get(i) > vec.get(pmajor)) {
+            if (vec.get(i) > vec.get(pmajor) && mark[i] == 0) {
                 pmajor = i;
+
             }
         }
 
-        vec.set(pmajor, -99999);// marcamos poniendo un numero pequeño
+        mark[pmajor] = 1;
         return pmajor;
     }
 
     public void CreatePotentials(ArrayList<Integer> flowPotential, ArrayList<Integer> distPotential, int size, int flow[][], int loc[][]) {
+
         for (int i = 0; i < size; i++) {
             flowPotential.add(0);
             distPotential.add(0);
@@ -51,19 +54,18 @@ public class Greedy {
     }
 
     public void SoluGreedy(int[][] flow, int[][] loc, int size, int[] s) {
-        int minorDist;
+        int[] minorDist;
         int majorFlow;
         ArrayList<Integer> distPotential = new ArrayList<>();
         ArrayList<Integer> flowPotential = new ArrayList<>();
-
+        mark = new int[size];
 
         CreatePotentials(flowPotential, distPotential, size, flow, loc);
 
         for (int i = 0; i < size; i++) {
-            majorFlow = majorFlow(flowPotential, size);
-            minorDist = minorDist(distPotential, size);
+            minorDist = minorDist(distPotential,mark, size);
+            majorFlow = majorFlow(flowPotential,mark,minorDist, size);
 
-            s[majorFlow] = minorDist + 1;
         }
             int contador = 0;
         for (int i = 0; i < size; i++) {
