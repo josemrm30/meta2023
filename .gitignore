@@ -87,6 +87,7 @@ fabric.properties
 .idea/workspace.xml
 PR1.iml
 log/
+
 ### Eclipse ###
 .apt_generated
 .classpath
