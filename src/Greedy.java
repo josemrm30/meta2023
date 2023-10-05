@@ -5,10 +5,11 @@ public class Greedy {
 
     public int minorDist(int[] dist, int[] mark, int size) {
         int pminor = 0;
-
+        int minDist = Integer.MAX_VALUE;
         for (int i = 0; i < size; i++) {
-            if (dist[i] <= dist[pminor] && mark[i] == 0) {
+            if (dist[i] < minDist && mark[i] == 0) {
                 pminor = i;
+                minDist = dist[i];
             }
         }
         mark[pminor] = 1;
@@ -34,10 +35,12 @@ public class Greedy {
 */
 
     public int majorFlow(int[] flow, int[] mark, int size) {
+        int maxFlow = Integer.MIN_VALUE;
         int pmajor = 0;
         for (int i = 0; i < size; i++) {
-            if (flow[i] >= flow[pmajor] && mark[i] == 0) {
+            if (flow[i] > maxFlow && mark[i] == 0) {
                 pmajor = i;
+                maxFlow = flow[i];
             }
         }
         mark[pmajor] = 1;
@@ -65,7 +68,6 @@ public class Greedy {
         mark2 = new int[size];
 
         CreatePotentials(flowPotential, distPotential, size, flow, distance);
-
         for (int i = 0; i < size; i++) {
             location = minorDist(distPotential, mark1, size);
             department = majorFlow(flowPotential, mark2, size);
@@ -73,12 +75,7 @@ public class Greedy {
         }
         int cost = this.Cost(s, flow, distance, size);
 
-        System.out.println("flow");
-        System.out.println(flowPotential.toString());
-        System.out.println("distance");
-        System.out.println(distPotential.toString());
-        System.out.println("solution");
-        System.out.println(Arrays.toString(s));
+        System.out.println(Arrays.toString(sol));
         System.out.println("Cost: " + cost);
 
 
