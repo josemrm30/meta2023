@@ -84,9 +84,14 @@ public class Main {
 
         //Solution sol = new Solution(config.getSolutions().get(0));
         Greedy greedy = new Greedy();
+        LocalSearch localS = new LocalSearch();
+
 
         for (int i = 0; i < solutions.size(); i++) {
             greedy.SoluGreedy(matrixs.get(i).getMatrix1(), matrixs.get(i).getMatrix2(), matrixs.get(i).getMatrixSize(), solutions.get(i).getSolutionList());
+        }
+        for(int i=0; i < solutions.size();i++) {
+            //localS.SolSLocal(matrixs.get(i).getMatrix1(), matrixs.get(i).getMatrix2(), matrixs.get(i).getMatrixSize(),config.getIterations(),solutions.get(i).getSolutionList(),0);
         }
 
 
