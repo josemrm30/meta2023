@@ -13,7 +13,9 @@ import java.util.*;
 public class Greedy {
     int[] mark;
 
-    public int[] minorDist(ArrayList<Integer> vec,int []mark, int size) {
+
+
+    public int[] minorDist(ArrayList<Integer> vec, int []mark, int size) {
         int pminor = 0;
         int[] prov = new int [size];
         for (int i = 0; i < size; i++) {
@@ -71,8 +73,11 @@ public class Greedy {
         for (int i = 0; i < size; i++) {
             contador += flowPotential.get(i);
         }
+        System.out.println("flow");
         System.out.println(flowPotential.toString());
+        System.out.println("distance");
         System.out.println(distPotential.toString());
+        System.out.println("solution");
         System.out.println(Arrays.toString(s));
     }
 
