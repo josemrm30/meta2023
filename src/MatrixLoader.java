@@ -66,6 +66,9 @@ public class MatrixLoader {
     public int[][] getMatrix1() {
            return matrix1;
     }
+    public int[][] getMatrix2() {
+        return matrix2;
+    }
   
     @Override
     public String toString() {
@@ -80,7 +83,4 @@ public class MatrixLoader {
         return str.toString();
     }
 
-    public String getName() {
-        return name;
-    }
 }
