@@ -9,6 +9,7 @@ public class MatrixLoader {
     private String name;
     private int matrix1[][];
     private int matrix2[][];
+    private int matrixSize;
 
 
     public MatrixLoader(String filePath) {
@@ -18,7 +19,7 @@ public class MatrixLoader {
         try {
             f = new FileReader(filePath);
             BufferedReader b = new BufferedReader(f);
-            int matrixSize = Integer.parseInt(b.readLine());
+            matrixSize = Integer.parseInt(b.readLine());
             matrix1 = new int[matrixSize][matrixSize];
             matrix2 = new int[matrixSize][matrixSize];
             line = b.readLine();
@@ -54,6 +55,18 @@ public class MatrixLoader {
         }
     }
 
+    public int getMatrixSize() {
+        return matrixSize;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int[][] getMatrix1() {
+           return matrix1;
+    }
+  
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder("Data filename: " + name + "\n" + "Matrix 1:" + "\n");

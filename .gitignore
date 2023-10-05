@@ -77,7 +77,6 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 ### IntelliJ IDEA ###
-out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .idea

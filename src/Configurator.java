@@ -7,6 +7,7 @@ public class Configurator {
     ArrayList<String> files;
     ArrayList<String> algorithms;
     ArrayList<Long> seeds;
+    ArrayList<String> solutions;
     Integer extraParameter;
     Boolean logs;
 
@@ -14,6 +15,7 @@ public class Configurator {
         files = new ArrayList<>();
         seeds = new ArrayList<>();
         algorithms = new ArrayList<>();
+        solutions = new ArrayList<>();
 
         String line;
         FileReader f = null;
@@ -46,6 +48,12 @@ public class Configurator {
                     case "OtherParameters":
                         extraParameter = Integer.parseInt(splited[1]);
                         break;
+                    case "Solutions":
+                        String[] vSolutions = splited[1].split(" ");
+                        for (int i = 0; i < vSolutions.length; i++) {
+                            solutions.add(vSolutions[i]);
+                        }
+                        break;
                     case "Logs":
                         logs = Boolean.parseBoolean(splited[1]);
                         break;
@@ -74,4 +82,7 @@ public class Configurator {
     public Integer getExtraParameter() {
         return extraParameter;
     }
+
+    public ArrayList<String> getSolutions() { return solutions; }
+
 }
