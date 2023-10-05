@@ -5,64 +5,74 @@ import java.util.random.*;
 
 public class LocalSearch {
 
-    void SolSLocal(int flow[][], int loc[][], int size, int eval, int solActual[], int random) {
-        int tipo;
-        //Calculamos el coste de la Solucion inicial
-        int actualCost=Cost (solActual,flow,loc,size);
-        //inicializamos a 0 la dlb
-        int[] dlb = new int [size];
-        for (int i=0; i<size; i++){
-            dlb[i]=0;
+    static int[] generarSolucionInicial(int size) {
+        int[] solucion = new int[size];
+        Random rand = new Random();
+        for (int i = 0; i < size; i++) {
+            solucion[i] = rand.nextInt(size); // Asignar unidades aleatoriamente a localizaciones
         }
-        int iter=0;
-        boolean mejora=true;
-        int pos=random;      //la primera posición es aleatoria
-        while (mejora && iter<eval) {
-            mejora=false;
+        return solucion;
+    }
 
-                tipo=pos;     //SI NO HAY CARGA ALEATORIA ESTA OPCION DA EL MISMO RESULTADO AUN CAMBIANDO SEMILLA
+    public static int[] swap(int[] SolActual, int i, int j) {
+        int[] nuevaSolucion = SolActual.clone();
+        int temp = nuevaSolucion[i];
+        nuevaSolucion[i] = nuevaSolucion[j];
+        nuevaSolucion[j] = temp;
+        return nuevaSolucion;
+    }
 
-                //tipo=Randint(0,size-1);   //PRIMERA UNIDAD DE INTERCAMBIO ALEATORIA
+    static void SolucionLocal(int flow[][], int loc[][], int size, int eval, int solActual[]) {
+        int actualCost = Cost(solActual, flow, loc,size);
+        int[] dlb = new int[size];
 
-            //comenzar por el principio y llegar hasta el punto de partida
-            for (int i=tipo, cont=0; cont<size && !mejora; i++, cont++){
-                if (i==size) i=0;  //para que vuelva a comparar con los que ha ya comparado y están a 0
-                if (dlb[i]==0) {
-                    boolean improve_flag = false;
+        for (int i = 0; i < size; i++) {
+            dlb[i] = 0; // Inicializar la DLB con 0 (ninguna unidad bloqueada)
+        }
 
-                    for (int j=i+1, cont1=0; cont1<size && !mejora; j++, cont1++){
+        int iter = 0;
+        boolean mejora = true;
+        int pos = 0;
+        while (mejora && iter < eval) {
+            mejora = false;
 
-                        if (j==size) j=0;  //para que vuelva a comparar con los que ha ya comparado y están a 0
-                        int C = FactCost2Opt (solActual, flow,loc, size, actualCost, i,j);
-                        if (C<actualCost){
-                            iter++;
-                            actualCost=C;
-                            swap(solActual,i,j);
-                            dlb[i] = dlb[j] = 0;
-                            pos=j;    //ULTIMA UNIDAD DE INTERCAMBIO
-                            improve_flag = true;
-                            mejora=true;
+            for (int i = pos; i < size; i++) {
+                if (dlb[i] == 0) {
+                    for (int j = i + 1; j < size; j++) {
+                        if (i != j) {
+                            // Generar una nueva solución intercambiando unidades i y j
+
+                            int[] nuevaSolucion = swap(solActual,i,j);
+                            // Calcular el costo de la nueva solución
+                            int nuevoCosto = FactCost2Opt(nuevaSolucion, flow, loc,size,actualCost,i,j);
+
+                            // Si la nueva solución es mejor, actualizar solActual y resetear la DLB
+                            if (nuevoCosto < actualCost) {
+                                solActual = nuevaSolucion;
+                                actualCost = nuevoCosto;
+                                dlb[i] = 0;
+                                dlb[j] = 0;
+                                pos=j;
+                                mejora = true;
+                                iter++;
+                            } else {
+                                dlb[i] = 1; // Marcar i como bloqueada en la DLB
+                            }
                         }
-
-                    }
-                    if (improve_flag == false) {
-                        dlb[i] = 1;
                     }
                 }
             }
 
-            //  if (iter % kPaso == 0) {
 
-            System.out.println( "Paso = " + iter);
-            System.out.println("Coste BL: " + actualCost);
-            System.out.println("Asignacion de Unidades a Localiz.:");
-            for (int i = 0; i <size; i++) {
-                System.out.print(solActual[i] + " ");
-            }
-            System.out.println();
-            //  }
+            // Imprimir información de cada iteración si lo deseas
+            System.out.println("Iteration " + iter + ", Cost: " + actualCost);
         }
 
+        // Imprimir la solución final
+        System.out.println("Final Solution: ");
+        for (int i = 0; i < size; i++) {
+            System.out.print(solActual[i] + " ");
+        }
     }
 
 
@@ -84,32 +94,20 @@ public class LocalSearch {
         }
     }
 
-    void swap(int[] SolActual, int r, int s) {
-        int aux;
-        aux = SolActual[r];
-        SolActual[r] = SolActual[s];
-        SolActual[s] = aux;
-    }
-
     //factorization function  with 2 elements
-    int FactCost2Opt(int[] ActualSol, int[][] flow, int[][] loc,
+    static int FactCost2Opt(int[] ActualSol, int[][] flow, int[][] loc,
                       int tam, int ActualCost, int r, int s) {
-
-        ActualCost += flow[s][s] * (loc[ActualSol[r]][ActualSol[r]] - loc[ActualSol[s]][ActualSol[s]]) +
-                flow[r][r] * (loc[ActualSol[s]][ActualSol[s]] - loc[ActualSol[r]][ActualSol[r]]) +
-                flow[s][r] * (loc[ActualSol[r]][ActualSol[s]] - loc[ActualSol[s]][ActualSol[r]]) +
-                flow[r][s] * (loc[ActualSol[s]][ActualSol[r]] - loc[ActualSol[r]][ActualSol[s]]);
-        for (int k = 0; k < tam; k++) {
-            if (k != r && k != s)
-                ActualCost += flow[r][k] * (loc[ActualSol[s]][ActualSol[k]] - loc[ActualSol[r]][ActualSol[k]]) +
-                        flow[s][k] * (loc[ActualSol[r]][ActualSol[k]] - loc[ActualSol[s]][ActualSol[k]]) +
-                        flow[k][r] * (loc[ActualSol[k]][ActualSol[s]] - loc[ActualSol[k]][ActualSol[r]]) +
-                        flow[k][s] * (loc[ActualSol[k]][ActualSol[r]] - loc[ActualSol[k]][ActualSol[s]]);
+        for (int k=0; k<tam; k++){
+            if (k!=r && k!=s)
+                ActualCost+= flow[r][k]*(loc[ActualSol[s]][ActualSol[k]]-loc[ActualSol[r]][ActualSol[k]])+
+                        flow[s][k]*(loc[ActualSol[r]][ActualSol[k]]-loc[ActualSol[s]][ActualSol[k]])+
+                        flow[k][r]*(loc[ActualSol[k]][ActualSol[s]]-loc[ActualSol[k]][ActualSol[r]])+
+                        flow[k][s]*(loc[ActualSol[k]][ActualSol[r]]-loc[ActualSol[k]][ActualSol[s]]);
         }
         return ActualCost;
     }
 
-    public int Cost(int[] s, int[][] flow, int[][] loc, int size) {
+    public static int Cost(int[] s, int[][] flow, int[][] loc, int size) {
         int cost = 0;
 
         for (int i = 0; i < size; i++) {

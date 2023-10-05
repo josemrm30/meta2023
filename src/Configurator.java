@@ -10,7 +10,6 @@ public class Configurator {
     ArrayList<String> solutions;
     Integer extraParameter;
     Boolean logs;
-
     Integer Iterations;
 
     public Configurator(String path) {
