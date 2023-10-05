@@ -14,7 +14,9 @@ public class Main {
     static ArrayList<MatrixLoader> matrixs;
     static Configurator config;
     static ArrayList<Solution> solutions;
+
     static ExecutorService executor;
+    private StringBuilder log;
 
     public static void loadFiles(String[] args) {
         config = new Configurator(args[0]);

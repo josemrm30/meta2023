@@ -19,6 +19,7 @@ public class Metaheuristic implements Runnable {
         log.append("Initial solution cost is X");
         long initTime = System.currentTimeMillis();
         //code to run
+        rand.nextInt();
         long endTime = System.currentTimeMillis();
 
         log.append("Final solution cost is X." + "\n" + "Time spent: " + (endTime - initTime) / 1000 + "seconds.");

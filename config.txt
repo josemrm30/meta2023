@@ -1,5 +1,5 @@
 Files=ford01.dat ford02.dat ford03.dat ford04.dat
-Seeds=12345
+Seeds=26512592 51262592 26255192 92512526
 Algorithms=BestFirst
 OtherParameters=1
 Solutions=ford01.sln ford02.sln ford03.sln ford04.sln

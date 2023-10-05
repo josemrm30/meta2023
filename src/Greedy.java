@@ -1,59 +1,77 @@
 import java.util.*;
 
 public class Greedy {
-    int[] mark;
+    int[] mark1, mark2;
 
-    public int[] minorDist(ArrayList<Integer> vec, int []mark, int size) {
+    public int minorDist(int[] dist, int[] mark, int size) {
+        int pminor = 0;
+
+        for (int i = 0; i < size; i++) {
+            if (dist[i] <= dist[pminor] && mark[i] == 0) {
+                pminor = i;
+            }
+        }
+        mark[pminor] = 1;
+        return pminor;
+    }
+/*
+    public int minorDist(int[] dist, int[] mark, int size) {
         int pminor = 0;
         int[] prov = new int[size];
 
         for (int i = 0; i < size; i++) {
-            if (vec.get(i) < vec.get(pminor) && mark[i] == 0) {
+            if (dist[i] < dist[pminor] && mark[i] == 0) {
                 pminor = i;
+            }
+        }
+        for (int i = 0; i < size; i++) {
+            if (dist[i] == dist[pminor] && mark[i] == 0) {
                 prov[i] = 1;
             }
         }
-        return prov;
+        return pminor;
     }
+*/
 
-    public void majorFlow(ArrayList<Integer> vec, int[] mark, int[] minordist, int size) {
+    public int majorFlow(int[] flow, int[] mark, int size) {
         int pmajor = 0;
         for (int i = 0; i < size; i++) {
-            if (vec.get(i) > vec.get(pmajor) && mark[i] == 0) {
+            if (flow[i] >= flow[pmajor] && mark[i] == 0) {
                 pmajor = i;
-
             }
         }
         mark[pmajor] = 1;
+        return pmajor;
     }
 
-    public void CreatePotentials(ArrayList<Integer> flowPotential, ArrayList<Integer> distPotential, int size, int flow[][], int loc[][]) {
+    public void CreatePotentials(int[] flowPotential, int[] distPotential, int size, int flow[][], int loc[][]) {
 
         for (int i = 0; i < size; i++) {
-            flowPotential.add(0);
-            distPotential.add(0);
             for (int j = 0; j < size; j++) {
-                flowPotential.set(i, flowPotential.get(i) + flow[i][j]);
-                distPotential.set(i, distPotential.get(i) + loc[i][j]);
+                flowPotential[i] = (flowPotential[i] + flow[i][j]);
+                distPotential[i] = (distPotential[i] + loc[i][j]);
             }
-            System.out.println("flow " + flowPotential.get(i) + " -- " + "dist " + distPotential.get(i));
         }
     }
 
-    public void SoluGreedy(int[][] flow, int[][] loc, int size, int[] s) {
-        int[] minorDist;
+    public void SoluGreedy(int[][] flow, int[][] distance, int size, int[] s) {
+        int[] sol = new int[size];
+        int location;
+        int department;
 
-        ArrayList<Integer> distPotential = new ArrayList<>();
-        ArrayList<Integer> flowPotential = new ArrayList<>();
-        mark = new int[size];
+        int[] distPotential = new int[size];
+        int[] flowPotential = new int[size];
+        mark1 = new int[size];
+        mark2 = new int[size];
 
-        CreatePotentials(flowPotential, distPotential, size, flow, loc);
+        CreatePotentials(flowPotential, distPotential, size, flow, distance);
 
         for (int i = 0; i < size; i++) {
-            minorDist = minorDist(distPotential, mark, size);
-            majorFlow(flowPotential, mark, minorDist, size);
+            location = minorDist(distPotential, mark1, size);
+            department = majorFlow(flowPotential, mark2, size);
+            sol[department] = location;
         }
-        int cost = this.Cost(s, flow, loc, size);
+        int cost = this.Cost(s, flow, distance, size);
 
         System.out.println("flow");
         System.out.println(flowPotential.toString());
