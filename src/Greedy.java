@@ -54,7 +54,7 @@ public class Greedy {
             majorFlow(flowPotential, mark, minorDist, size);
         }
         int cost = this.Cost(s, flow, loc, size);
-        
+
         System.out.println("flow");
         System.out.println(flowPotential.toString());
         System.out.println("distance");
