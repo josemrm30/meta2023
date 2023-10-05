@@ -73,6 +73,14 @@ public class Greedy {
         for (int i = 0; i < size; i++) {
             contador += flowPotential.get(i);
         }
+
+        int contador2 = 0;
+        for (int i = 0; i < size; i++) {
+            contador2 += minorDist.get(i);
+        }
+
+        System.out.println("");
+
         System.out.println("flow");
         System.out.println(flowPotential.toString());
         System.out.println("distance");
