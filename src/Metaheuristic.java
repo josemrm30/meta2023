@@ -1,32 +1,43 @@
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.*;
 
 public class Metaheuristic implements Runnable {
     private Random rand;
-    private MatrixLoader file;
-    private StringBuilder log;
+    private Problem file;
+    private Logger log;
     private CountDownLatch cdl;
 
-    public Metaheuristic(MatrixLoader file, CountDownLatch cdl, Long seed) {
+    public Metaheuristic(Problem file, ArrayList<Solution> solutions, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog) throws IOException {
         this.file = file;
         this.cdl = cdl;
         rand = new Random(seed);
-        log = new StringBuilder();
+        log = Logger.getLogger(Metaheuristic.class.getName() + " " + logFile);
+        if (consoleLog){
+            ConsoleHandler consoleHand = new ConsoleHandler();
+            log.addHandler(consoleHand);
+        }
+        else{
+            FileHandler fileHand = new FileHandler(logFile);
+            log.setUseParentHandlers(false);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fileHand.setFormatter(formatter);
+            log.addHandler(fileHand);
+        }
     }
 
     @Override
     public void run() {
-        log.append("Initial solution cost is X");
+
         long initTime = System.currentTimeMillis();
         //code to run
+        log.log(Level.INFO, "test");
         rand.nextInt();
         long endTime = System.currentTimeMillis();
 
-        log.append("Final solution cost is X." + "\n" + "Time spent: " + (endTime - initTime) / 1000 + "seconds.");
+      //  log.append("Final solution cost is X." + "\n" + "Time spent: " + (endTime - initTime) / 1000 + "seconds.");
         cdl.countDown();
-    }
-
-    public String getLog() {
-        return log.toString();
     }
 }
