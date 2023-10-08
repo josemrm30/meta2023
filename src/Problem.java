@@ -5,14 +5,14 @@ import java.util.Arrays;
 
 
 // TODO: add javadoc
-public class MatrixLoader {
+public class Problem {
     private String name;
     private int matrix1[][];
     private int matrix2[][];
     private int matrixSize;
 
 
-    public MatrixLoader(String filePath) {
+    public Problem(String filePath) {
         String line;
         name = filePath.split("\\.")[0];
         FileReader f = null;
