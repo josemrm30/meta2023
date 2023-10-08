@@ -5,7 +5,7 @@ import java.util.random.*;
 
 public class LocalSearch {
 
-    static int[] generarSolucionInicial(int size) {
+    int[] generarSolucionInicial(int size) {
         int[] solucion = new int[size];
         Random rand = new Random();
         for (int i = 0; i < size; i++) {
@@ -14,7 +14,7 @@ public class LocalSearch {
         return solucion;
     }
 
-    public static int[] swap(int[] SolActual, int i, int j) {
+    public int[] swap(int[] SolActual, int i, int j) {
         int[] nuevaSolucion = SolActual.clone();
         int temp = nuevaSolucion[i];
         nuevaSolucion[i] = nuevaSolucion[j];
@@ -22,8 +22,8 @@ public class LocalSearch {
         return nuevaSolucion;
     }
 
-    static void SolucionLocal(int flow[][], int loc[][], int size, int eval, int solActual[]) {
-        int actualCost = Cost(solActual, flow, loc,size);
+    void SolucionLocal(int flow[][], int loc[][], int size, int eval, int solActual[]) {
+        int actualCost = Cost( flow, loc,size,solActual);
         int[] dlb = new int[size];
 
         for (int i = 0; i < size; i++) {
@@ -44,7 +44,7 @@ public class LocalSearch {
 
                             int[] nuevaSolucion = swap(solActual,i,j);
                             // Calcular el costo de la nueva solución
-                            int nuevoCosto = FactCost2Opt(nuevaSolucion, flow, loc,size,actualCost,i,j);
+                            int nuevoCosto = FactCost2Opt( flow, loc,size,nuevaSolucion,actualCost,i,j);
 
                             // Si la nueva solución es mejor, actualizar solActual y resetear la DLB
                             if (nuevoCosto < actualCost) {
@@ -95,29 +95,28 @@ public class LocalSearch {
     }
 
     //factorization function  with 2 elements
-    static int FactCost2Opt(int[] ActualSol, int[][] flow, int[][] loc,
-                      int tam, int ActualCost, int r, int s) {
+    int FactCost2Opt( int[][] flow, int[][] loc,
+                      int tam, int[] ActualSol,int ActualCost, int r, int s) {
         for (int k=0; k<tam; k++){
             if (k!=r && k!=s)
-                ActualCost+= flow[r][k]*(loc[ActualSol[s]][ActualSol[k]]-loc[ActualSol[r]][ActualSol[k]])+
-                        flow[s][k]*(loc[ActualSol[r]][ActualSol[k]]-loc[ActualSol[s]][ActualSol[k]])+
-                        flow[k][r]*(loc[ActualSol[k]][ActualSol[s]]-loc[ActualSol[k]][ActualSol[r]])+
-                        flow[k][s]*(loc[ActualSol[k]][ActualSol[r]]-loc[ActualSol[k]][ActualSol[s]]);
+                ActualCost+= flow[r][k]*(loc[ActualSol[s]-1][ActualSol[k]-1]-loc[ActualSol[r]-1][ActualSol[k]-1])+
+                        flow[s][k]*(loc[ActualSol[r]-1][ActualSol[k]-1]-loc[ActualSol[s]-1][ActualSol[k]-1])+
+                        flow[k][r]*(loc[ActualSol[k]-1][ActualSol[s]-1]-loc[ActualSol[k]-1][ActualSol[r]-1])+
+                        flow[k][s]*(loc[ActualSol[k]-1][ActualSol[r]-1]-loc[ActualSol[k]-1][ActualSol[s]-1]);
         }
         return ActualCost;
     }
 
-    public static int Cost(int[] s, int[][] flow, int[][] loc, int size) {
+    public int Cost(int[][] flow, int[][] loc, int size, int[] sol) {
         int cost = 0;
-
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (i != j)
-                    cost += flow[i][j] * loc[i][j];
+                if (i != j) {
+                    cost += flow[i][j] * loc[sol[i]-1][sol[j]-1];
+                }
             }
         }
         return cost;
     }
-
 
 }
