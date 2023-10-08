@@ -1,82 +1,84 @@
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Greedy {
-    int[] mark;
+    private final int[] distances;
+    private final int[] flows;
+    private Logger log;
 
-    public int[] minorDist(ArrayList<Integer> vec, int []mark, int size) {
-        int pminor = 0;
-        int[] prov = new int[size];
-
-        for (int i = 0; i < size; i++) {
-            if (vec.get(i) < vec.get(pminor) && mark[i] == 0) {
-                pminor = i;
-                prov[i] = 1;
-            }
-        }
-        return prov;
+    public Greedy(int size, Logger log) {
+        distances = new int[size];
+        flows = new int[size];
+        this.log = log;
     }
 
-    public void majorFlow(ArrayList<Integer> vec, int[] mark, int[] minordist, int size) {
+    public int minorDist(int[] dist, int[] mark, int size) {
+        int minDist = Integer.MAX_VALUE;
+        int department = 0;
+        for (int i = 0; i < size; i++) {
+            if (dist[i] <= minDist && mark[i] == 0) {
+                minDist = dist[i];
+                department = i;
+            }
+        }
+        mark[department] = 1;
+        return department;
+    }
+
+    public int majorFlow(int[] flow, int[] mark, int size) {
+        int maxFlow = Integer.MIN_VALUE;
         int pmajor = 0;
         for (int i = 0; i < size; i++) {
-            if (vec.get(i) > vec.get(pmajor) && mark[i] == 0) {
+            if (flow[i] >= maxFlow && mark[i] == 0) {
                 pmajor = i;
-
+                maxFlow = flow[i];
             }
         }
         mark[pmajor] = 1;
+        return pmajor;
     }
 
-    public void CreatePotentials(ArrayList<Integer> flowPotential, ArrayList<Integer> distPotential, int size, int flow[][], int loc[][]) {
-
+    public void CreatePotentials(int[] flowPotential, int[] distPotential, int size, int flow[][], int dist[][]) {
         for (int i = 0; i < size; i++) {
-            flowPotential.add(0);
-            distPotential.add(0);
             for (int j = 0; j < size; j++) {
-                flowPotential.set(i, flowPotential.get(i) + flow[i][j]);
-                distPotential.set(i, distPotential.get(i) + loc[i][j]);
+                flowPotential[i] += flow[i][j];
+                distPotential[i] += dist[i][j];
             }
-            System.out.println("flow " + flowPotential.get(i) + " -- " + "dist " + distPotential.get(i));
         }
     }
 
-    public void SoluGreedy(int[][] flow, int[][] loc, int size, int[] s) {
-        int[] minorDist;
+    public Solution SoluGreedy(int[][] flow, int[][] distance, int size) {
+        Solution sol = new Solution(size);
+        int location;
+        int department;
 
-        ArrayList<Integer> distPotential = new ArrayList<>();
-        ArrayList<Integer> flowPotential = new ArrayList<>();
-        mark = new int[size];
+        int[] mark1 = new int[size];
+        int[] mark2 = new int[size];
 
-        CreatePotentials(flowPotential, distPotential, size, flow, loc);
+        CreatePotentials(flows, distances, size, flow, distance);
 
         for (int i = 0; i < size; i++) {
-            minorDist = minorDist(distPotential, mark, size);
-            majorFlow(flowPotential, mark, minorDist, size);
+            location = minorDist(distances, mark1, size);
+            department = majorFlow(flows, mark2, size);
+            sol.getSolutionList()[department] = location + 1;
         }
-        int cost = this.Cost(s, flow, loc, size);
+        sol.setCost(this.Cost(flow, distance, size, sol.getSolutionList()));
 
-        System.out.println("flow");
-        System.out.println(flowPotential.toString());
-        System.out.println("distance");
-        System.out.println(distPotential.toString());
-        System.out.println("solution");
-        System.out.println(Arrays.toString(s));
-        System.out.println("Cost: " + cost);
+        log.log(Level.INFO, sol.toString());
 
-
+        return sol;
     }
 
-    public int Cost(int[] s, int[][] flow, int[][] loc, int size) {
+    public int Cost(int[][] flow, int[][] loc, int size, int[] sol) {
         int cost = 0;
-
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (i != j)
-                    cost += flow[i][j] * loc[i][j];
+                if (i != j) {
+                    cost += flow[i][j] * loc[sol[i]-1][sol[j]-1];
+                }
             }
         }
         return cost;
     }
-
-
 }

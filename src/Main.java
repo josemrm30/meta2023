@@ -1,73 +1,62 @@
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.*;
+import java.util.logging.*;
+
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
-    static ArrayList<MatrixLoader> matrixs;
+    static ArrayList<Problem> problems = new ArrayList<>();
     static Configurator config;
-    static ArrayList<Solution> solutions;
-    static ExecutorService executor;
+    static ExecutorService executor = Executors.newCachedThreadPool();
+    static ArrayList<Solution> greedySolutions = new ArrayList<>();
+    static Logger log;
 
     public static void loadFiles(String[] args) {
         config = new Configurator(args[0]);
-        matrixs = new ArrayList<>();
-        solutions = new ArrayList<>();
 
         for (int i = 0; i < config.getFiles().size(); i++) {
-            MatrixLoader loader = new MatrixLoader(config.getFiles().get(i));
-            matrixs.add(loader);
-        }
-        for (int i = 0; i < config.getSolutions().size(); i++) {
-            Solution solutionLoader = new Solution(config.getSolutions().get(i));
-            solutions.add(solutionLoader);
+            Problem problem = new Problem(config.getFiles().get(i));
+            problems.add(problem);
         }
     }
 
-    public static void printFiles() {
-        if (config.logs) {
-            System.out.println("TODO");
-        } else {
-            for (int i = 0; i < config.getFiles().size(); i++) {
-                System.out.println(matrixs.get(i).toString());
+    public static void getInitialSolutions() throws IOException {
+        for (int i = 0; i < problems.size(); i++) {
+            String logFile = "log/" + "greedy" + "_" + problems.get(i).getName() + ".txt";
+            log = Logger.getLogger(Main.class.getName() + " " + logFile);
+            if (config.consoleLog){
+                ConsoleHandler consoleHand = new ConsoleHandler();
+                log.addHandler(consoleHand);
             }
+            else{
+                FileHandler fileHand = new FileHandler(logFile);
+                log.setUseParentHandlers(false);
+                SimpleFormatter formatter = new SimpleFormatter();
+                fileHand.setFormatter(formatter);
+                log.addHandler(fileHand);
+            }
+            Greedy greedy = new Greedy(problems.get(i).getMatrixSize(), log);
+            Solution greedySol = greedy.SoluGreedy(problems.get(i).getMatrix1(), problems.get(i).getMatrix2(), problems.get(i).getMatrixSize());
+            greedySolutions.add(greedySol);
         }
     }
 
-    public static void saveLog(String path, String text) throws IOException {
-        PrintWriter pw;
-        try (FileWriter file = new FileWriter(path)) {
-            pw = new PrintWriter(file);
-            pw.print(text);
-        }
-    }
-
-    public static void runAlgorithms() throws IOException{
-        executor = Executors.newCachedThreadPool();
-
+    public static void runAlgorithms() throws IOException {
         for (int i = 0; i < config.getAlgorithms().size(); i++) {
-            for (MatrixLoader matrix : matrixs) {
+            for (Problem problem : problems) {
                 try {
                     CountDownLatch cdl = new CountDownLatch(config.getSeeds().size());
                     switch (config.getAlgorithms().get(i)) {
                         case "BestFirst":
-                            ArrayList<Metaheuristic> algRun = new ArrayList<>();
                             for (int k = 0; k < config.getSeeds().size(); k++) {
-                                Metaheuristic meta = new Metaheuristic(matrix, cdl, config.getSeeds().get(k));
-                                algRun.add(meta);
+                                String logFile = "log/" + config.getAlgorithms().get(i) + "_" + problem.getName() + "_" + config.getSeeds().get(k) + ".txt";
+                                Metaheuristic meta = new Metaheuristic(problem, greedySolutions, cdl, config.getSeeds().get(k), logFile, config.consoleLog);
                                 executor.execute(meta);
                             }
                             cdl.await();
-                            for (int k = 0; k < algRun.size(); k++) {
-                                saveLog(("log/" + config.getAlgorithms().get(i) + "_" + matrix.getName()) + "_" + config.getSeeds().get(k) + ".txt", algRun.get(k).getLog());
-                            }
                             break;
                     }
                 } catch (InterruptedException ex) {
@@ -77,34 +66,11 @@ public class Main {
         }
     }
 
-
     public static void main(String[] args) throws IOException {
         loadFiles(args);
-        printFiles();
-
-        //Solution sol = new Solution(config.getSolutions().get(0));
-        Greedy greedy = new Greedy();
-        LocalSearch localS = new LocalSearch();
+        getInitialSolutions();
 
 
-        for (int i = 0; i < solutions.size(); i++) {
-            greedy.SoluGreedy(matrixs.get(i).getMatrix1(), matrixs.get(i).getMatrix2(), matrixs.get(i).getMatrixSize(), solutions.get(i).getSolutionList());
-        }
-        //for(int i=0; i < solutions.size();i++) {
-            //localS.SolSLocal(matrixs.get(i).getMatrix1(), matrixs.get(i).getMatrix2(), matrixs.get(i).getMatrixSize(),config.getIterations(),solutions.get(i).getSolutionList(),5);
-            //localS.SolucionLocal2(matrixs.get(i).getMatrix1(), matrixs.get(i).getMatrix2(), matrixs.get(i).getMatrixSize(),config.getIterations(),solutions.get(i).getSolutionList());
-        //}
-        LocalSearch Lsearch = new LocalSearch();
-        int size = config.getFiles().size();
-        int[][] flow = new int[size][size]; // Matriz de costos de flujo
-        int[][] loc = new int[size][size];  // Matriz de costos de asignación
-        int[] solActual = Lsearch.generarSolucionInicial(config.getFiles().size()); // Generar una solución inicial aleatoria
-        System.out.println("Local Search solution");
-        for (int i = 0; i < solutions.size(); i++) {
-            Lsearch.SolucionLocal(matrixs.get(i).getMatrix1(), matrixs.get(i).getMatrix2(), matrixs.get(i).getMatrixSize(), config.getIterations(), solutions.get(i).getSolutionList());
-        }
-        //localsearch.greedy();
-        //printSolution();
         runAlgorithms();
 
     }
