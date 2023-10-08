@@ -30,14 +30,11 @@ public class Metaheuristic implements Runnable {
 
     @Override
     public void run() {
-
         long initTime = System.currentTimeMillis();
         //code to run
         log.log(Level.INFO, "test");
-        rand.nextInt();
         long endTime = System.currentTimeMillis();
 
-      //  log.append("Final solution cost is X." + "\n" + "Time spent: " + (endTime - initTime) / 1000 + "seconds.");
         cdl.countDown();
     }
 }

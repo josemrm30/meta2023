@@ -14,8 +14,6 @@ public class Main {
     static ArrayList<Solution> greedySolutions = new ArrayList<>();
     static Logger log;
 
-    static ArrayList<Metaheuristic> algorithmsRun = new ArrayList<>();
-
     public static void loadFiles(String[] args) {
         config = new Configurator(args[0]);
 
@@ -43,7 +41,6 @@ public class Main {
             Greedy greedy = new Greedy(problems.get(i).getMatrixSize(), log);
             Solution greedySol = greedy.SoluGreedy(problems.get(i).getMatrix1(), problems.get(i).getMatrix2(), problems.get(i).getMatrixSize());
             greedySolutions.add(greedySol);
-
         }
     }
 
@@ -57,7 +54,6 @@ public class Main {
                             for (int k = 0; k < config.getSeeds().size(); k++) {
                                 String logFile = "log/" + config.getAlgorithms().get(i) + "_" + problem.getName() + "_" + config.getSeeds().get(k) + ".txt";
                                 Metaheuristic meta = new Metaheuristic(problem, greedySolutions, cdl, config.getSeeds().get(k), logFile, config.consoleLog);
-                                algorithmsRun.add(meta);
                                 executor.execute(meta);
                             }
                             cdl.await();
