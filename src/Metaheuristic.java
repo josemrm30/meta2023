@@ -10,7 +10,7 @@ public class Metaheuristic implements Runnable {
     private Logger log;
     private CountDownLatch cdl;
 
-    public Metaheuristic(Problem file, ArrayList<Solution> solutions, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog) throws IOException {
+    public Metaheuristic(Problem file, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog) throws IOException {
         this.file = file;
         this.cdl = cdl;
         rand = new Random(seed);

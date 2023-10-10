@@ -11,8 +11,6 @@ public class Main {
     static ArrayList<Problem> problems = new ArrayList<>();
     static Configurator config;
     static ExecutorService executor = Executors.newCachedThreadPool();
-    static ArrayList<Solution> greedySolutions = new ArrayList<>();
-    static Logger log;
 
     public static void loadFiles(String[] args) {
         config = new Configurator(args[0]);
@@ -20,27 +18,6 @@ public class Main {
         for (int i = 0; i < config.getFiles().size(); i++) {
             Problem problem = new Problem(config.getFiles().get(i));
             problems.add(problem);
-        }
-    }
-
-    public static void getInitialSolutions() throws IOException {
-        for (int i = 0; i < problems.size(); i++) {
-            String logFile = "log/" + "greedy" + "_" + problems.get(i).getName() + ".txt";
-            log = Logger.getLogger(Main.class.getName() + " " + logFile);
-            if (config.consoleLog){
-                ConsoleHandler consoleHand = new ConsoleHandler();
-                log.addHandler(consoleHand);
-            }
-            else{
-                FileHandler fileHand = new FileHandler(logFile);
-                log.setUseParentHandlers(false);
-                SimpleFormatter formatter = new SimpleFormatter();
-                fileHand.setFormatter(formatter);
-                log.addHandler(fileHand);
-            }
-            Greedy greedy = new Greedy(problems.get(i).getMatrixSize(), log);
-            Solution greedySol = greedy.SoluGreedy(problems.get(i).getMatrix1(), problems.get(i).getMatrix2(), problems.get(i).getMatrixSize());
-            greedySolutions.add(greedySol);
         }
     }
 
@@ -53,7 +30,7 @@ public class Main {
                         case "BestFirst":
                             for (int k = 0; k < config.getSeeds().size(); k++) {
                                 String logFile = "log/" + config.getAlgorithms().get(i) + "_" + problem.getName() + "_" + config.getSeeds().get(k) + ".txt";
-                                Metaheuristic meta = new Metaheuristic(problem, greedySolutions, cdl, config.getSeeds().get(k), logFile, config.consoleLog);
+                                Metaheuristic meta = new Metaheuristic(problem, cdl, config.getSeeds().get(k), logFile, config.consoleLog);
                                 executor.execute(meta);
                             }
                             cdl.await();
@@ -68,7 +45,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         loadFiles(args);
-        getInitialSolutions();
 
 
         runAlgorithms();
