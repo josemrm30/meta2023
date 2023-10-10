@@ -8,8 +8,7 @@ public class Configurator {
     ArrayList<String> algorithms;
     ArrayList<Long> seeds;
     ArrayList<String> solutions;
-    Integer extraParameter;
-    Integer Iterations;
+    int iterations;
     Boolean consoleLog;
 
     public Configurator(String path) {
@@ -46,11 +45,8 @@ public class Configurator {
                             algorithms.add(vAlgorithms[i]);
                         }
                         break;
-                    case "OtherParameters":
-                        extraParameter = Integer.parseInt(splited[1]);
-                        break;
                     case "Iterations":
-                         Iterations = Integer.parseInt(splited[1]);
+                        iterations = Integer.parseInt(splited[1]);
                         break;
                     case "ConsoleLog":
                         consoleLog = Boolean.parseBoolean(splited[1]);
@@ -77,10 +73,9 @@ public class Configurator {
         return seeds;
     }
 
-    public Integer getExtraParameter() {
-        return extraParameter;
+    public int getIterations() {
+        return iterations;
     }
-
-    public Integer getIterations(){ return Iterations;}
-
 }
+
+

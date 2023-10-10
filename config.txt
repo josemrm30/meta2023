@@ -1,6 +1,5 @@
 Files=ford01.dat ford02.dat ford03.dat ford04.dat
 Seeds=26512592 51262592 26255192 92512526 25265192
-Algorithms=BestFirst
-OtherParameters=1
+Algorithms=LocalSearch
 ConsoleLog=False
 Iterations=1000

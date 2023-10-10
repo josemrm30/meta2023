@@ -7,8 +7,8 @@ import java.util.Arrays;
 // TODO: add javadoc
 public class Problem {
     private String name;
-    private int matrix1[][];
-    private int matrix2[][];
+    private int flowMatrix[][];
+    private int distMatrix[][];
     private int matrixSize;
 
 
@@ -20,8 +20,8 @@ public class Problem {
             f = new FileReader(filePath);
             BufferedReader b = new BufferedReader(f);
             matrixSize = Integer.parseInt(b.readLine());
-            matrix1 = new int[matrixSize][matrixSize];
-            matrix2 = new int[matrixSize][matrixSize];
+            flowMatrix = new int[matrixSize][matrixSize];
+            distMatrix = new int[matrixSize][matrixSize];
             line = b.readLine();
             for (int i = 0; i < matrixSize; i++) {
                 line = b.readLine();
@@ -29,7 +29,7 @@ public class Problem {
                 int errors = 0;
                 for (int j = 0; j < splited.length; j++) {
                     try {
-                        matrix1[i][j - errors] = Integer.parseInt(splited[j]);
+                        flowMatrix[i][j - errors] = Integer.parseInt(splited[j]);
                     } catch (NumberFormatException ex) {
                         errors++;
                     }
@@ -42,7 +42,7 @@ public class Problem {
                 int errors = 0;
                 for (int j = 0; j < splited.length; j++) {
                     try {
-                        matrix2[i][j - errors] = Integer.parseInt(splited[j]);
+                        distMatrix[i][j - errors] = Integer.parseInt(splited[j]);
                     } catch (NumberFormatException ex) {
                         errors++;
                     }
@@ -63,21 +63,21 @@ public class Problem {
         return name;
     }
 
-    public int[][] getMatrix1() {
-           return matrix1;
+    public int[][] getFlowMatrix() {
+           return flowMatrix;
     }
-    public int[][] getMatrix2() {
-        return matrix2;
+    public int[][] getDistMatrix() {
+        return distMatrix;
     }
   
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder("Data filename: " + name + "\n" + "Matrix 1:" + "\n");
-        for (int[] ints : matrix1) {
+        StringBuilder str = new StringBuilder("Data filename: " + name + "\n" + "FlowMatrix:" + "\n");
+        for (int[] ints : flowMatrix) {
             str.append(Arrays.toString(ints)).append("\n");
         }
-        str.append("Matrix 2:").append("\n");
-        for (int[] ints : matrix2) {
+        str.append("DistMatrix:").append("\n");
+        for (int[] ints : distMatrix) {
             str.append(Arrays.toString(ints)).append("\n");
         }
         return str.toString();

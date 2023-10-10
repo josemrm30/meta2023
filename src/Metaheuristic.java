@@ -1,19 +1,20 @@
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.*;
 
 public class Metaheuristic implements Runnable {
-    private Random rand;
-    private Problem file;
+    private Problem problem;
     private Logger log;
     private CountDownLatch cdl;
+    private int iterations;
+    private Long seed;
 
-    public Metaheuristic(Problem file, ArrayList<Solution> solutions, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog) throws IOException {
-        this.file = file;
+    public Metaheuristic(Problem problem, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog, int iterations) throws IOException {
+        this.problem = problem;
         this.cdl = cdl;
-        rand = new Random(seed);
+        this.iterations = iterations;
+        this.seed = seed;
         log = Logger.getLogger(Metaheuristic.class.getName() + " " + logFile);
         if (consoleLog){
             ConsoleHandler consoleHand = new ConsoleHandler();
@@ -32,8 +33,10 @@ public class Metaheuristic implements Runnable {
     public void run() {
         long initTime = System.currentTimeMillis();
         //code to run
-        log.log(Level.INFO, "test");
+        LocalSearch localSearch = new LocalSearch(problem, iterations, seed, log);
+        localSearch.searchLocalSolution();
         long endTime = System.currentTimeMillis();
+        log.log(Level.INFO, "Run time = " + (endTime-initTime) + "seconds");
 
         cdl.countDown();
     }

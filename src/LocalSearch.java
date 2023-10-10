@@ -1,43 +1,59 @@
+import java.util.Random;
+import java.util.logging.Logger;
+
 public class LocalSearch {
 
-    /*private Solution initialSolution;
-    public LocalSearch() {
-        initialSolution = getInitialSolution();
-    }*/
+    private final Solution actualSolution;
+    private Random rand;
+    private Logger log;
+    private final Problem problem;
+    private final int iterations;
 
-    public Solution getInitialSolution(int size, int[][] flow, int[][] distance) {
-        Greedy greedy = new Greedy(size);
-        return greedy.SoluGreedy(flow, distance, size);
+    public LocalSearch(Problem problem, int iterations, Long seed, Logger log) {
+        this.problem = problem;
+        this.iterations = iterations;
+        this.log = log;
+        rand = new Random(seed);
+        actualSolution = getInitialSolution(problem);
+    }
+
+    public Solution getInitialSolution(Problem problem) {
+        Greedy greedy = new Greedy(problem.getMatrixSize());
+        return greedy.SoluGreedy(problem.getFlowMatrix(), problem.getDistMatrix());
     }
 
     public int[] swapSolution(int[] actualSolution, int i, int j) {
-        int[] newSol = actualSolution;
+        int[] newSol = actualSolution.clone();
         int temp = newSol[i];
         newSol[i] = newSol[j];
         newSol[j] = temp;
         return newSol;
     }
 
-    public void LocalSolution(int[][] flow, int[][] loc, int size, int maxIterations, Solution actualSolution) {
+    public void searchLocalSolution() {
+        int size = problem.getMatrixSize();
+        int[][] flow = problem.getFlowMatrix();
+        int[][] dist = problem.getDistMatrix();
         int[] dlb = new int[size];
         int iter = 0;
         boolean improvement = true;
-        int pos = 0;
+        int pos = rand.nextInt(0, size);
         int[] solutionList = actualSolution.getSolutionList();
         int actualCost = actualSolution.getCost();
 
 
-        while (improvement && iter < maxIterations) {
+        while (improvement && iter < iterations) {
             improvement = false;
 
             for (int i = pos; i < size - 1; i++) {
+                // TODO: preguntar a cristobal sobre como reinicializar desde el principio
                 if (dlb[i] == 0) {
                     for (int j = i + 1; j < size; j++) {
-                        int[] newSolution = swapSolution(solutionList, i, j);
-                        // Calcular el costo de la nueva solución
-                        int newCost = Factorization2Opt(flow, loc, size, newSolution, actualCost, i, j);
 
-                        // Si la nueva solución es mejor, actualizar solActual y resetear la DLB
+                        int[] newSolution = swapSolution(solutionList, i, j);
+
+                        int newCost = Factorization2Opt(flow, dist, size, newSolution, actualCost, i, j);
+
                         if (newCost < actualCost) {
                             solutionList = newSolution;
                             actualCost = newCost;
@@ -47,7 +63,7 @@ public class LocalSearch {
                             improvement = true;
                             iter++;
                         } else {
-                            dlb[i] = 1; // Marcar i como bloqueada en la DLB
+                            dlb[i] = 1;
                         }
                     }
                 }
