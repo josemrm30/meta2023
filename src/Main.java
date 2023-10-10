@@ -38,7 +38,7 @@ public class Main {
                 fileHand.setFormatter(formatter);
                 log.addHandler(fileHand);
             }
-            Greedy greedy = new Greedy(problems.get(i).getMatrixSize(), log);
+            Greedy greedy = new Greedy(problems.get(i).getMatrixSize());
             Solution greedySol = greedy.SoluGreedy(problems.get(i).getMatrix1(), problems.get(i).getMatrix2(), problems.get(i).getMatrixSize());
             greedySolutions.add(greedySol);
         }
@@ -75,10 +75,11 @@ public class Main {
         int size = config.getFiles().size();
         int[][] flow = new int[size][size]; // Matriz de costos de flujo
         int[][] loc = new int[size][size];  // Matriz de costos de asignación
-        int[] solActual = Lsearch.generarSolucionInicial(config.getFiles().size()); // Generar una solución inicial aleatoria
+// Generar una solución inicial aleatoria
         System.out.println("Local Search solution");
         for (int i = 0; i < greedySolutions.size(); i++) {
-            Lsearch.SolucionLocal(problems.get(i).getMatrix1(), problems.get(i).getMatrix2(), problems.get(i).getMatrixSize(), config.getIterations(), greedySolutions.get(i).getSolutionList());
+            int[] solActual = Lsearch.getInitialSolution(config.getFiles().size(), problems.get(i).getMatrix1(), problems.get(i).getMatrix2()).getSolutionList();
+            Lsearch.LocalSolution(problems.get(i).getMatrix1(), problems.get(i).getMatrix2(), problems.get(i).getMatrixSize(), config.getIterations(), greedySolutions.get(i));
         }
 
         runAlgorithms();

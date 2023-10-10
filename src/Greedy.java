@@ -5,12 +5,10 @@ import java.util.logging.Logger;
 public class Greedy {
     private final int[] distances;
     private final int[] flows;
-    private Logger log;
 
-    public Greedy(int size, Logger log) {
+    public Greedy(int size) {
         distances = new int[size];
         flows = new int[size];
-        this.log = log;
     }
 
     public int minorDist(int[] dist, int[] mark, int size) {
@@ -65,7 +63,6 @@ public class Greedy {
         }
         sol.setCost(this.Cost(flow, distance, size, sol.getSolutionList()));
 
-        log.log(Level.INFO, sol.toString());
 
         return sol;
     }
