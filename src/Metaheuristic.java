@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 import java.util.logging.*;
 
 public class Metaheuristic implements Runnable {
@@ -34,14 +35,15 @@ public class Metaheuristic implements Runnable {
     @Override
     public void run() {
         long initTime = System.currentTimeMillis();
+        int cost = 0;
         switch (this.alg){
             case "PMDLBit":
                 LocalSearch localSearch = new LocalSearch(problem, iterations, seed, log);
-                localSearch.searchLocalSolution();
+                cost = localSearch.searchLocalSolution();
                 break;
         }
         long endTime = System.currentTimeMillis();
-        log.log(Level.INFO, "Run time = " + (endTime-initTime) + "milliseconds");
+        log.log(Level.INFO, "Run time = " + (endTime-initTime) + " milliseconds. " + "Final cost = " + cost);
 
         cdl.countDown();
     }
