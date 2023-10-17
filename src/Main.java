@@ -24,17 +24,13 @@ public class Main {
             for (Problem problem : problems) {
                 try {
                     CountDownLatch cdl = new CountDownLatch(config.getSeeds().size());
-                    switch (config.getAlgorithms().get(i)) {
-                        case "LocalSearch":
-                            for (int k = 0; k < config.getSeeds().size(); k++) {
-                                String logFile = "log/" + config.getAlgorithms().get(i) + "_" + problem.getName() + "_" + config.getSeeds().get(k) + ".txt";
-                                Metaheuristic meta = new Metaheuristic(problem, cdl, config.getSeeds().get(k), logFile, config.consoleLog, config.getIterations());
-                                executor.execute(meta);
-                            }
-                            cdl.await();
-                            break;
-                    }
-                } catch (InterruptedException ex) {
+                        for (int k = 0; k < config.getSeeds().size(); k++) {
+                            String logFile = "log/" + config.getAlgorithms().get(i) + "_" + problem.getName() + "_" + config.getSeeds().get(k) + ".txt";
+                            Metaheuristic meta = new Metaheuristic(problem, cdl, config.getSeeds().get(k), logFile, config.consoleLog, config.getIterations(), config.getAlgorithms().get(i));
+                            executor.execute(meta);
+                        }
+                        cdl.await();
+                    } catch (InterruptedException ex) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

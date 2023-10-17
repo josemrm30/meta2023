@@ -61,7 +61,7 @@ public class LocalSearch {
                             int[] newSolution = swapSolution(solutionList, i, j);
                             log.log(Level.INFO, "Swapped solution list in positions i = " + i + " j = " + j + " " + Arrays.toString(newSolution));
                             int newCost = Factorization2Opt(flow, dist, size, newSolution, actualCost, i, j);
-                            log.log(Level.INFO, "Swapper solution cost = " + newCost);
+                            log.log(Level.INFO, "Swapped solution cost = " + newCost);
                             if (newCost < actualCost) {
                                 log.log(Level.INFO, "Accepted swapped solution");
                                 solutionList = newSolution;
@@ -79,16 +79,7 @@ public class LocalSearch {
                     }
                 }
             }
-            // Imprimir información de cada iteración si lo deseas
-            System.out.println("Iteration " + iter + ", Cost: " + actualCost);
         }
-
-        // Imprimir la solución final
-        System.out.println("Final Solution: ");
-        for (int i = 0; i < size; i++) {
-            System.out.print(solutionList[i] + " ");
-        }
-
     }
 
 

@@ -9,12 +9,14 @@ public class Metaheuristic implements Runnable {
     private CountDownLatch cdl;
     private int iterations;
     private Long seed;
+    private String alg;
 
-    public Metaheuristic(Problem problem, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog, int iterations) throws IOException {
+    public Metaheuristic(Problem problem, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog, int iterations, String alg) throws IOException {
         this.problem = problem;
         this.cdl = cdl;
         this.iterations = iterations;
         this.seed = seed;
+        this.alg = alg;
         log = Logger.getLogger(Metaheuristic.class.getName() + " " + logFile);
         if (consoleLog){
             ConsoleHandler consoleHand = new ConsoleHandler();
@@ -32,11 +34,14 @@ public class Metaheuristic implements Runnable {
     @Override
     public void run() {
         long initTime = System.currentTimeMillis();
-        //code to run
-        LocalSearch localSearch = new LocalSearch(problem, iterations, seed, log);
-        localSearch.searchLocalSolution();
+        switch (this.alg){
+            case "PMDLBit":
+                LocalSearch localSearch = new LocalSearch(problem, iterations, seed, log);
+                localSearch.searchLocalSolution();
+                break;
+        }
         long endTime = System.currentTimeMillis();
-        log.log(Level.INFO, "Run time = " + (endTime-initTime) + "seconds");
+        log.log(Level.INFO, "Run time = " + (endTime-initTime) + "milliseconds");
 
         cdl.countDown();
     }
