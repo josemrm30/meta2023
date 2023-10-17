@@ -53,35 +53,35 @@ public class LocalSearch {
                         int contadorJ = 0;
                         for (int j = i + 1; j < size && contadorJ < size; j++) {
                             contadorJ++;
+                            System.out.println("i:"+ i + " j:" + j+ " iter:" + iter + " dlb" + Arrays.toString(dlb));
                             if (i != j){
-                                    log.log(Level.INFO, "Actual solution list = " + Arrays.toString(solutionList));
-                                    int[] newSolution = swapSolution(solutionList, i, j);
-                                    log.log(Level.INFO, "Swapped solution list in positions i = " + i + " j = " + j + " " + Arrays.toString(newSolution));
-                                    int newCost = Factorization2Opt(flow, dist, size, newSolution, actualCost, i, j);
-                                    log.log(Level.INFO, "Swapped solution cost = " + newCost);
+                                log.log(Level.INFO, "Actual solution list = " + Arrays.toString(solutionList));
+                                int[] newSolution = swapSolution(solutionList, i, j);
+                                log.log(Level.INFO, "Swapped solution list in positions i = " + i + " j = " + j + " " + Arrays.toString(newSolution));
+                                int newCost = Factorization2Opt(flow, dist, size, newSolution, actualCost, i, j);
+                                log.log(Level.INFO, "Swapped solution cost = " + newCost);
 
-                                    if (newCost < actualCost) {
-                                        log.log(Level.INFO, "Iteration = " + iter);
-                                        log.log(Level.INFO, "Accepted swapped solution");
-                                        solutionList = newSolution;
-                                        actualCost = newCost;
-                                        dlb[i] = 0;
-                                        dlb[j] = 0;
-                                        pos = j;
-                                        improvement = true;
-                                        iter++;
-                                    } else {
-                                        log.log(Level.INFO, "Rejected swapped solution");
-                                        dlb[i] = 1;
-                                    }
-                                    if (j == size - 1) {
-                                        j = -1;
-                                    }
-
+                                if (newCost < actualCost) {
+                                    log.log(Level.INFO, "Iteration = " + iter);
+                                    log.log(Level.INFO, "Accepted swapped solution");
+                                    solutionList = newSolution;
+                                    actualCost = newCost;
+                                    dlb[i] = 0;
+                                    dlb[j] = 0;
+                                    pos = j;
+                                    improvement = true;
+                                    iter++;
+                                } else {
+                                    log.log(Level.INFO, "Rejected swapped solution");
+                                    dlb[i] = 1;
+                                }
+                                if (j == size - 1) {
+                                    j = -1;
+                                }
                         }
                     }
                     if (i == size - 1) {
-                        i = 0;
+                        i = -1;
                     }
                 }
             }
