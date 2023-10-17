@@ -1,55 +1,105 @@
-
+import java.util.Arrays;
 import java.util.Random;
-import java.util.random.*;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LocalSearch {
 
-    void SolSLocal(long flow[][], long loc[][], int size, int eval, int solActual[]) {
+    private final Solution actualSolution;
+    private Random rand;
+    private Logger log;
+    private final Problem problem;
+    private final int iterations;
 
-
+    public LocalSearch(Problem problem, int iterations, Long seed, Logger log) {
+        this.problem = problem;
+        this.iterations = iterations;
+        this.log = log;
+        rand = new Random(seed);
+        actualSolution = getInitialSolution(problem);
     }
 
+    public Solution getInitialSolution(Problem problem) {
+        Greedy greedy = new Greedy(problem.getMatrixSize());
+        return greedy.SoluGreedy(problem.getFlowMatrix(), problem.getDistMatrix());
+    }
 
-    void initialcharge(int[] s, int tam, long seed) {
+    public int[] swapSolution(int[] actualSolution, int i, int j) {
+        int[] newSol = actualSolution.clone();
+        int temp = newSol[i];
+        newSol[i] = newSol[j];
+        newSol[j] = temp;
+        return newSol;
+    }
 
-        int randomNumberInRange;
-        //Set_random(seed);
+    public void searchLocalSolution() {
+        int size = problem.getMatrixSize();
+        int[][] flow = problem.getFlowMatrix();
+        int[][] dist = problem.getDistMatrix();
+        int[] dlb = new int[size];
+        int iter = 0;
+        boolean improvement = true;
+        int pos = rand.nextInt(0, size);
+        int[] solutionList = actualSolution.getSolutionList();
+        int actualCost = actualSolution.getCost();
+        log.log(Level.INFO, "Random start position = " + pos);
+        int contadorI = 0;
+        int contadorJ = 0;
+        while (improvement && iter < iterations) {
+            improvement = false;
+            log.log(Level.INFO, "Iteration = " + iter);
+            for (int i = pos; i < size; i++) {
+                contadorI++;
+                if (contadorI < 20) {
 
-        //genero vector con todos los elementos
-        for (int i = 0; i < tam; i++) {
-            s[i] = i;
+                    if (i == size - 1) {
+                        i = 0;
+                    }
+                    // TODO: preguntar a cristobal sobre como reinicializar desde el principio y sobre el coste extra de los logs
+                    if (dlb[i] == 0) {
+                        for (int j = i + 1; j < size; j++) {
+                            contadorJ++;
+                            if(contadorJ < 20){
+                                if (j == size - 1) {
+                                    j = 0;
+                                }
+                                log.log(Level.INFO, "Actual solution list = " + Arrays.toString(solutionList));
+                                int[] newSolution = swapSolution(solutionList, i, j);
+                                log.log(Level.INFO, "Swapped solution list in positions i = " + i + " j = " + j + " " + Arrays.toString(newSolution));
+                                int newCost = Factorization2Opt(flow, dist, size, newSolution, actualCost, i, j);
+                                log.log(Level.INFO, "Swapped solution cost = " + newCost);
+                                
+                                if (newCost < actualCost) {
+                                    log.log(Level.INFO, "Accepted swapped solution");
+                                    solutionList = newSolution;
+                                    actualCost = newCost;
+                                    dlb[i] = 0;
+                                    dlb[j] = 0;
+                                    pos = j;
+                                    improvement = true;
+                                    iter++;
+                                } else {
+                                    log.log(Level.INFO, "Rejected swapped solution");
+                                    dlb[i] = 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        // y lo reorganizamos al azar
-
-        for (int i = 0; i < tam; i++) {
-            randomNumberInRange = (int) Math.random() * (tam - 0) + 0;
-            //elements swapping
-            swap(s, i, randomNumberInRange);
-        }
     }
 
-    void swap(int[] SolActual, int r, int s) {
-        int aux;
-        aux = SolActual[r];
-        SolActual[r] = SolActual[s];
-        SolActual[s] = aux;
-    }
 
     //factorization function  with 2 elements
-    int FactCost2Opt(int[] ActualSol, int[][] flow, int[][] loc,
-                      int tam, int ActualCost, int r, int s) {
-
-        ActualCost += flow[s][s] * (loc[ActualSol[r]][ActualSol[r]] - loc[ActualSol[s]][ActualSol[s]]) +
-                flow[r][r] * (loc[ActualSol[s]][ActualSol[s]] - loc[ActualSol[r]][ActualSol[r]]) +
-                flow[s][r] * (loc[ActualSol[r]][ActualSol[s]] - loc[ActualSol[s]][ActualSol[r]]) +
-                flow[r][s] * (loc[ActualSol[s]][ActualSol[r]] - loc[ActualSol[r]][ActualSol[s]]);
+    private int Factorization2Opt(int[][] flow, int[][] loc, int tam, int[] actualSolution, int ActualCost, int r, int s) {
         for (int k = 0; k < tam; k++) {
-            if (k != r && k != s)
-                ActualCost += flow[r][k] * (loc[ActualSol[s]][ActualSol[k]] - loc[ActualSol[r]][ActualSol[k]]) +
-                        flow[s][k] * (loc[ActualSol[r]][ActualSol[k]] - loc[ActualSol[s]][ActualSol[k]]) +
-                        flow[k][r] * (loc[ActualSol[k]][ActualSol[s]] - loc[ActualSol[k]][ActualSol[r]]) +
-                        flow[k][s] * (loc[ActualSol[k]][ActualSol[r]] - loc[ActualSol[k]][ActualSol[s]]);
+            if (k != r && k != s) {
+                ActualCost += flow[r][k] * (loc[actualSolution[s] - 1][actualSolution[k] - 1] - loc[actualSolution[r] - 1][actualSolution[k] - 1]) +
+                        flow[s][k] * (loc[actualSolution[r] - 1][actualSolution[k] - 1] - loc[actualSolution[s] - 1][actualSolution[k] - 1]) +
+                        flow[k][r] * (loc[actualSolution[k] - 1][actualSolution[s] - 1] - loc[actualSolution[k] - 1][actualSolution[r] - 1]) +
+                        flow[k][s] * (loc[actualSolution[k] - 1][actualSolution[r] - 1] - loc[actualSolution[k] - 1][actualSolution[s] - 1]);
+            }
         }
         return ActualCost;
     }

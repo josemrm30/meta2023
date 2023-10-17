@@ -1,19 +1,16 @@
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class Greedy {
     private final int[] distances;
     private final int[] flows;
-    private Logger log;
+    private int size;
 
-    public Greedy(int size, Logger log) {
+    public Greedy(int size) {
+        this.size = size;
         distances = new int[size];
         flows = new int[size];
-        this.log = log;
+
     }
 
-    public int minorDist(int[] dist, int[] mark, int size) {
+    public int minorDist(int[] dist, int[] mark) {
         int minDist = Integer.MAX_VALUE;
         int department = 0;
         for (int i = 0; i < size; i++) {
@@ -26,7 +23,7 @@ public class Greedy {
         return department;
     }
 
-    public int majorFlow(int[] flow, int[] mark, int size) {
+    public int majorFlow(int[] flow, int[] mark) {
         int maxFlow = Integer.MIN_VALUE;
         int pmajor = 0;
         for (int i = 0; i < size; i++) {
@@ -39,7 +36,7 @@ public class Greedy {
         return pmajor;
     }
 
-    public void CreatePotentials(int[] flowPotential, int[] distPotential, int size, int flow[][], int dist[][]) {
+    public void CreatePotentials(int[] flowPotential, int[] distPotential, int flow[][], int dist[][]) {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 flowPotential[i] += flow[i][j];
@@ -48,7 +45,7 @@ public class Greedy {
         }
     }
 
-    public Solution SoluGreedy(int[][] flow, int[][] distance, int size) {
+    public Solution SoluGreedy(int[][] flow, int[][] distance) {
         Solution sol = new Solution(size);
         int location;
         int department;
@@ -56,21 +53,19 @@ public class Greedy {
         int[] mark1 = new int[size];
         int[] mark2 = new int[size];
 
-        CreatePotentials(flows, distances, size, flow, distance);
+        CreatePotentials(flows, distances, flow, distance);
 
         for (int i = 0; i < size; i++) {
-            location = minorDist(distances, mark1, size);
-            department = majorFlow(flows, mark2, size);
+            location = minorDist(distances, mark1);
+            department = majorFlow(flows, mark2);
             sol.getSolutionList()[department] = location + 1;
         }
-        sol.setCost(this.Cost(flow, distance, size, sol.getSolutionList()));
-
-        log.log(Level.INFO, sol.toString());
+        sol.setCost(this.Cost(flow, distance, sol.getSolutionList()));
 
         return sol;
     }
 
-    public int Cost(int[][] flow, int[][] loc, int size, int[] sol) {
+    public int Cost(int[][] flow, int[][] loc, int[] sol) {
         int cost = 0;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
