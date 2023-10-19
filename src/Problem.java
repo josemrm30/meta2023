@@ -6,52 +6,46 @@ import java.util.Arrays;
 
 // TODO: add javadoc
 public class Problem {
-    private String name;
-    private int flowMatrix[][];
-    private int distMatrix[][];
-    private int matrixSize;
+    private final String name;
+    private final int[][] flowMatrix;
+    private final int[][] distMatrix;
+    private final int matrixSize;
 
 
-    public Problem(String filePath) {
+    public Problem(String filePath) throws IOException {
         String line;
         name = filePath.split("\\.")[0];
-        FileReader f = null;
-        try {
-            f = new FileReader(filePath);
-            BufferedReader b = new BufferedReader(f);
-            matrixSize = Integer.parseInt(b.readLine());
-            flowMatrix = new int[matrixSize][matrixSize];
-            distMatrix = new int[matrixSize][matrixSize];
+        FileReader f;
+        f = new FileReader(filePath);
+        BufferedReader b = new BufferedReader(f);
+        matrixSize = Integer.parseInt(b.readLine());
+        flowMatrix = new int[matrixSize][matrixSize];
+        distMatrix = new int[matrixSize][matrixSize];
+        line = b.readLine();
+        for (int i = 0; i < matrixSize; i++) {
             line = b.readLine();
-            for (int i = 0; i < matrixSize; i++) {
-                line = b.readLine();
-                String[] splited = line.split(" ");
-                int errors = 0;
-                for (int j = 0; j < splited.length; j++) {
-                    try {
-                        flowMatrix[i][j - errors] = Integer.parseInt(splited[j]);
-                    } catch (NumberFormatException ex) {
-                        errors++;
-                    }
+            String[] splited = line.split(" ");
+            int errors = 0;
+            for (int j = 0; j < splited.length; j++) {
+                try {
+                    flowMatrix[i][j - errors] = Integer.parseInt(splited[j]);
+                } catch (NumberFormatException ex) {
+                    errors++;
                 }
             }
+        }
+        line = b.readLine();
+        for (int i = 0; i < matrixSize; i++) {
             line = b.readLine();
-            for (int i = 0; i < matrixSize; i++) {
-                line = b.readLine();
-                String[] splited = line.split(" ");
-                int errors = 0;
-                for (int j = 0; j < splited.length; j++) {
-                    try {
-                        distMatrix[i][j - errors] = Integer.parseInt(splited[j]);
-                    } catch (NumberFormatException ex) {
-                        errors++;
-                    }
+            String[] splited = line.split(" ");
+            int errors = 0;
+            for (int j = 0; j < splited.length; j++) {
+                try {
+                    distMatrix[i][j - errors] = Integer.parseInt(splited[j]);
+                } catch (NumberFormatException ex) {
+                    errors++;
                 }
             }
-
-
-        } catch (IOException e) {
-            System.err.println(e);
         }
     }
 

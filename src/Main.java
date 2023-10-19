@@ -3,8 +3,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
-import java.util.logging.*;
+
 
 
 public class Main {
@@ -12,7 +11,7 @@ public class Main {
     static Configurator config;
     static ExecutorService executor = Executors.newCachedThreadPool();
 
-    public static void loadFiles(String[] args) {
+    public static void loadFiles(String[] args) throws IOException {
         config = new Configurator(args[0]);
 
         for (int i = 0; i < config.getFiles().size(); i++) {

@@ -1,7 +1,7 @@
 public class Greedy {
     private final int[] distances;
     private final int[] flows;
-    private int size;
+    private final int size;
 
     public Greedy(int size) {
         this.size = size;
@@ -36,7 +36,7 @@ public class Greedy {
         return pmajor;
     }
 
-    public void CreatePotentials(int[] flowPotential, int[] distPotential, int flow[][], int dist[][]) {
+    public void CreatePotentials(int[] flowPotential, int[] distPotential, int[][] flow, int[][] dist) {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 flowPotential[i] += flow[i][j];
