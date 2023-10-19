@@ -36,6 +36,10 @@ public class Solution {
         return solutionList;
     }
 
+    public void setSolutionList(int[] solution){
+        solutionList = solution;
+    }
+
     @Override
     public String toString() {
         return "Solution = {" +

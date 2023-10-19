@@ -8,7 +8,10 @@ public class Configurator {
     ArrayList<String> algorithms;
     ArrayList<Long> seeds;
     ArrayList<String> solutions;
-    int iterations;
+    private int iterations;
+    private int Tabuprob;
+    private int tenenciaTabu;
+    private int estancamientos;
     Boolean consoleLog;
 
     public Configurator(String path) {
@@ -48,6 +51,15 @@ public class Configurator {
                     case "Iterations":
                         iterations = Integer.parseInt(splited[1]);
                         break;
+                    case "TabuProb":
+                        Tabuprob = Integer.parseInt(splited[1]);
+                        break;
+                    case "TenenciaTabu":
+                        tenenciaTabu = Integer.parseInt(splited[1]);
+                        break;
+                    case "Estancamientos":
+                        estancamientos = Integer.parseInt(splited[1]);
+                        break;
                     case "ConsoleLog":
                         consoleLog = Boolean.parseBoolean(splited[1]);
                         break;
@@ -76,6 +88,13 @@ public class Configurator {
     public int getIterations() {
         return iterations;
     }
+
+    public int getTabuprob(){return Tabuprob;}
+
+    public int getTenenciaTabu(){return tenenciaTabu;}
+
+    public int getEstancamientos(){return estancamientos;}
+
 }
 
 

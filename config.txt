@@ -3,3 +3,6 @@ Seeds=26512592 51262592 26255192 92512526 25265192
 Algorithms=PMDLBit
 ConsoleLog=False
 Iterations=1000
+TabuProb=50
+TenenciaTabu=7
+Estancamientos=50

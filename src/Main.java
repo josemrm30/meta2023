@@ -27,7 +27,9 @@ public class Main {
             for (Problem problem : problems) {
                 for (int k = 0; k < config.getSeeds().size(); k++) {
                     String logFile = "log/" + config.getAlgorithms().get(i) + "_" + problem.getName() + "_" + config.getSeeds().get(k) + ".txt";
-                    Metaheuristic meta = new Metaheuristic(problem, cdl, config.getSeeds().get(k), logFile, config.consoleLog, config.getIterations(), config.getAlgorithms().get(i));
+                    Metaheuristic meta = new Metaheuristic(problem, cdl, config.getSeeds().get(k), logFile, config.consoleLog,
+                            config.getIterations(),config.getTabuprob(),config.getTenenciaTabu(),config.getEstancamientos(),
+                            config.getAlgorithms().get(i));
                     //executor.execute(meta);
                     meta.run();
                 }

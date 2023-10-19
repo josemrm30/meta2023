@@ -9,13 +9,19 @@ public class Metaheuristic implements Runnable {
     private Logger log;
     private CountDownLatch cdl;
     private int iterations;
+    private int TabuProb;
+    private int tenenciaTabu;
+    private int estancamientos;
     private Long seed;
     private String alg;
 
-    public Metaheuristic(Problem problem, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog, int iterations, String alg) throws IOException {
+    public Metaheuristic(Problem problem, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog, int iterations,int tabuProb,int tenenciaTabu, int estancamientos, String alg) throws IOException {
         this.problem = problem;
         this.cdl = cdl;
         this.iterations = iterations;
+        this.TabuProb = tabuProb;
+        this.tenenciaTabu= tenenciaTabu;
+        this.estancamientos=estancamientos;
         this.seed = seed;
         this.alg = alg;
         log = Logger.getLogger(Metaheuristic.class.getName() + " " + logFile);
