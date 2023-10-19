@@ -63,13 +63,13 @@ public class LocalSearch {
                             j = 0;
                         }
                         contadorJ++;
-                        System.out.println("i:"+ i + " j:" + j+ " iter:" + iter + " dlb" + Arrays.toString(dlb));
                         if (i != j){
                             log.log(Level.INFO, "Actual solution list = " + Arrays.toString(solutionList));
                             int[] newSolution = swapSolution(solutionList, i, j);
                             log.log(Level.INFO, "Swapped solution list in positions i = " + i + " j = " + j + " " + Arrays.toString(newSolution));
                             int newCost = Factorization2Opt(flow, dist, size, newSolution, actualCost, i, j);
                             log.log(Level.INFO, "Swapped solution cost = " + newCost);
+                            log.log(Level.INFO, "i: "+ i + " j: " + j + " contI: " + contadorI + " contJ: " + contadorJ + " iteration: " + iter + " dlb" + Arrays.toString(dlb) + " Cost: " + actualCost + " New cost: " + newCost);
 
                             if (newCost < actualCost) {
                                 log.log(Level.INFO, "Iteration = " + iter);
