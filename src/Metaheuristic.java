@@ -1,19 +1,17 @@
 import java.io.IOException;
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Semaphore;
 import java.util.logging.*;
 
 public class Metaheuristic implements Runnable {
-    private Problem problem;
-    private Logger log;
-    private CountDownLatch cdl;
-    private int iterations;
-    private int TabuProb;
-    private int tenenciaTabu;
-    private int estancamientos;
-    private Long seed;
-    private String alg;
+    private final Problem problem;
+    private final Logger log;
+    private final CountDownLatch cdl;
+    private final int iterations;
+    private final int TabuProb;
+    private final int tenenciaTabu;
+    private final int estancamientos;
+    private final Long seed;
+    private final String alg;
 
     public Metaheuristic(Problem problem, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog, int iterations,int tabuProb,int tenenciaTabu, int estancamientos, String alg) throws IOException {
         this.problem = problem;

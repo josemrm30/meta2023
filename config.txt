@@ -3,6 +3,9 @@ Seeds=26512592 51262592 26255192 92512526 25265192
 Algorithms=TabuSearch
 ConsoleLog=False
 Iterations=1000
+<<<<<<< HEAD
 TabuProb=50
 TenenciaTabu=7
 Estancamientos=50
+=======
+>>>>>>> 26439a416a92394ea7cc069a6cc8cea6285f8999
