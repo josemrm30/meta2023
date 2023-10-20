@@ -143,6 +143,18 @@ public class TabuSearch {
         lTabu.get(col).getSolutionList()[fil] = temp;
     }
 
+    public void swap(Solution[] lTabu, int fil, int col) {
+        int temp = lTabu[fil].getSolutionList()[col];
+        lTabu[fil].getSolutionList()[col] = lTabu[col].getSolutionList()[fil];
+        lTabu[col].getSolutionList()[fil] = temp;
+    }
+
+    public void swap(int[][] lTabu, int fil, int col) {
+        int temp = lTabu[fil][col];
+        lTabu[fil][col] = lTabu[col][fil];
+        lTabu[col][fil] = temp;
+    }
+
 
     int TabuSearch(int[][] flu, int[][] loc,
                     int tam, int evaluaciones, int tenenciaTabu, int estancamientos,
@@ -163,7 +175,7 @@ public class TabuSearch {
         //memorias a corto y largo plazo
 
         //memoria de frecuencias
-        int[][] memFrec = new int[tam][tam];
+        int[][] memFrec = new int[tam+1][tam+1];
 
         for (int i = 0; i < tam; i++)
             for (int j = 0; j < tam; j++)
@@ -176,8 +188,7 @@ public class TabuSearch {
         //metemos la solucion inicial en tabu
         lTabu.add(actualSolution);
         //lista tabu implicita
-        ArrayList<Solution> lTabu2 = new ArrayList<>();
-        lTabu2.add(actualSolution);
+        int[][] lTabu2 = new int[tam][tam];
 
         //dlb y vectores de apoyo
         int[] dlb = new int[tam];
@@ -208,7 +219,7 @@ public class TabuSearch {
             tipo = rand.nextInt(0, tam - 1);   //PRIMERA UNIDAD DE INTERCAMBIO ALEATORIA
 
             CosteMejorPeor = Integer.MAX_VALUE;  //cada iteracion
-            int fil = -1, col = -1;
+            int fil = 0, col = 0;
             //comenzar por el principio y llegar hasta el punto de partida
             for (int i = tipo, cont = 0; cont < tam && !mejora; i++, cont++) {
                 if (i == tam) i = 0;  //para que cicle
@@ -237,8 +248,8 @@ public class TabuSearch {
                             fil = i;
                             col = j;
                             if (fil > col) swap(lTabu2, fil, col);
-                            System.out.println(lTabu2.size());
-                            if (lTabu2.get(fil).getSolutionList()[col] > 0)
+                            System.out.println(lTabu2.length);
+                            if (lTabu2[fil][col] > 0)
                                 tabu = true;
                         }
 
@@ -289,7 +300,6 @@ public class TabuSearch {
                     lTabu.remove(0);
                 }
                 lTabu.add(SolActual);
-                lTabu2.add(SolActual);
             } else {
                 //ACTUALIZO la memoria de frecuencias
                 for (int k = 0; k < tam; k++) {
@@ -299,19 +309,18 @@ public class TabuSearch {
                     lTabu.remove(0);
                 }
                 lTabu.add(mejorPeores);
-                lTabu2.add(mejorPeores);
             }
 
             //ACTUALIZO tabu2 con pares de intercambio
             for (int k = 0; k < tam - 1; k++) {
                 for (int l = k + 1; l < tam; l++) {
-                    if (lTabu2.get(k).getSolutionList()[l] > 0)
-                        lTabu2.get(k).getSolutionList()[l]--;
+                    if (lTabu2[k][l] > 0)
+                        lTabu2[k][l]--;
                 }
             }
 
             if (fil > col) swap(lTabu2, fil, col);
-            lTabu2.get(fil).getSolutionList()[col] = tenenciaTabu;
+            lTabu2[fil][col] = tenenciaTabu;
 
             if (!mejora) {
 
@@ -406,7 +415,7 @@ public class TabuSearch {
 
                 for (int i = 0; i < tam - 1; i++)
                     for (int j = i + 1; j < tam; j++)
-                        lTabu2.get(i).getSolutionList()[j] = 0;
+                        lTabu2[i][j] = 0;
 
                 //reinicializamos la dlb
 
@@ -425,8 +434,8 @@ public class TabuSearch {
 
         }
 
-        System.out.println("MEJORAS-D: " + OEMejoraD + "NO MEJORAS-D: " + OEnoMejoraD);
-        System.out.println("MEJORAS-I: " + OEMejoraI + "NO MEJORAS-I: " + OEnoMejoraI);
+        System.out.println("MEJORAS-D: " + OEMejoraD + " NO MEJORAS-D: " + OEnoMejoraD);
+        System.out.println("MEJORAS-I: " + OEMejoraI + " NO MEJORAS-I: " + OEnoMejoraI);
 
         SolActual = SolGlobal;
         return CGlobal;
