@@ -1,6 +1,6 @@
 Files=ford01.dat ford02.dat ford03.dat ford04.dat
 Seeds=26512592 51262592 26255192 92512526 25265192
-Algorithms=PMDLBit
+Algorithms=TabuSearch
 ConsoleLog=False
 Iterations=1000
 TabuProb=50

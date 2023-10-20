@@ -47,6 +47,11 @@ public class Metaheuristic implements Runnable {
                 LocalSearch localSearch = new LocalSearch(problem, iterations, seed, log);
                 cost = localSearch.searchLocalSolution();
                 break;
+            case "TabuSearch":
+                TabuSearch tabuSearch = new TabuSearch(problem, iterations, seed,TabuProb ,log,tenenciaTabu);
+                cost = tabuSearch.TabuSearch(problem.getFlowMatrix(),problem.getDistMatrix(),problem.getMatrixSize(),
+                                    iterations,tenenciaTabu,estancamientos,tabuSearch.getInitialSolution(problem));
+                break;
         }
         long endTime = System.currentTimeMillis();
         log.log(Level.INFO, "Run time = " + (endTime-initTime) + " milliseconds. " + "Final cost = " + cost);

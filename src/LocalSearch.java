@@ -44,8 +44,8 @@ public class LocalSearch {
         int actualCost = actualSolution.getCost();
         log.log(Level.INFO, "Random start position = " + pos);
         while (improvement && iter < iterations) {
-            for (int i=0; i<size; i++){
-                dlb[i]=0;
+            for (int i = 0; i < size; i++) {
+                dlb[i] = 0;
             }
 
             improvement = false;
@@ -63,13 +63,13 @@ public class LocalSearch {
                             j = 0;
                         }
                         contadorJ++;
-                        if (i != j){
+                        if (i != j) {
                             log.log(Level.INFO, "Actual solution list = " + Arrays.toString(solutionList));
                             int[] newSolution = swapSolution(solutionList, i, j);
                             log.log(Level.INFO, "Swapped solution list in positions i = " + i + " j = " + j + " " + Arrays.toString(newSolution));
                             int newCost = Factorization2Opt(flow, dist, size, newSolution, actualCost, i, j);
                             log.log(Level.INFO, "Swapped solution cost = " + newCost);
-                            log.log(Level.INFO, "i: "+ i + " j: " + j + " contI: " + contadorI + " contJ: " + contadorJ + " iteration: " + iter + " dlb" + Arrays.toString(dlb) + " Cost: " + actualCost + " New cost: " + newCost);
+                            log.log(Level.INFO, "i: " + i + " j: " + j + " contI: " + contadorI + " contJ: " + contadorJ + " iteration: " + iter + " dlb" + Arrays.toString(dlb) + " Cost: " + actualCost + " New cost: " + newCost);
 
                             if (newCost < actualCost) {
                                 log.log(Level.INFO, "Iteration = " + iter);
@@ -85,10 +85,8 @@ public class LocalSearch {
                                 log.log(Level.INFO, "Rejected swapped solution");
                                 dlb[i] = 1;
                             }
-
                         }
                     }
-
                 }
             }
         }

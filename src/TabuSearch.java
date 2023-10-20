@@ -15,7 +15,7 @@ public class TabuSearch {
     private int Tabuprob;
     private int Tenenciatabu;
 
-    public TabuSearch(Problem problem, int iterations, int seed,int Tabuprob, Logger log, int tenenciaTabu) {
+    public TabuSearch(Problem problem, int iterations, long seed,int Tabuprob, Logger log, int tenenciaTabu) {
         this.problem = problem;
         this.iterations = iterations;
         this.Tabuprob = Tabuprob;
@@ -144,7 +144,7 @@ public class TabuSearch {
     }
 
 
-    void TabuSearch(int[][] flu, int[][] loc,
+    int TabuSearch(int[][] flu, int[][] loc,
                     int tam, int evaluaciones, int tenenciaTabu, int estancamientos,
                     Solution SolActual) {
 
@@ -170,8 +170,6 @@ public class TabuSearch {
                 memFrec[i][j] = 0;
 
         //lista tabu explicita
-        //list<vector<int> > lTabu;
-        //lTabu.resize(tenenciaTabu-1,vector<int>(tam,0));
         ArrayList<Solution> lTabu = new ArrayList<>();
 
 
@@ -239,7 +237,8 @@ public class TabuSearch {
                             fil = i;
                             col = j;
                             if (fil > col) swap(lTabu2, fil, col);
-                            if (lTabu2.get(fil).getSolutionList()[col] > 0)
+                            System.out.println(lTabu2.size());
+                            if (lTabu2.get(fil).getSolutionList()[col] >= 0)
                                 tabu = true;
                         }
 
@@ -428,6 +427,7 @@ public class TabuSearch {
         System.out.println("MEJORAS-I: " + OEMejoraI + "NO MEJORAS-I: " + OEnoMejoraI);
 
         SolActual = SolGlobal;
+        return CGlobal;
     }
 
 
