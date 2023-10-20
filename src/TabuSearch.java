@@ -78,7 +78,7 @@ public class TabuSearch {
     }
 
     void menosVisitados(int[][] memfrec, Solution provnuevaSol) {
-        int tam = provnuevaSol.getSize();
+        int tam = provnuevaSol.getSolutionList().length;
         int[] nuevaSol = provnuevaSol.getSolutionList();
         int menor = Integer.MAX_VALUE;
         int pf = -1;
@@ -177,7 +177,7 @@ public class TabuSearch {
         lTabu.add(actualSolution);
         //lista tabu implicita
         ArrayList<Solution> lTabu2 = new ArrayList<>();
-
+        lTabu2.add(actualSolution);
 
         //dlb y vectores de apoyo
         int[] dlb = new int[tam];
@@ -225,7 +225,7 @@ public class TabuSearch {
                         swapSolution(aux2, i, j);
 
                         for (int l = 0; l < lTabu.size(); l++) {
-                            if (lTabu.get(l) == aux2) {
+                            if (lTabu.get(l).getSolutionList() == aux2.getSolutionList()) {
                                 tabu = true;  //esta en lista tabu
                                 break;
                             }
@@ -238,7 +238,7 @@ public class TabuSearch {
                             col = j;
                             if (fil > col) swap(lTabu2, fil, col);
                             System.out.println(lTabu2.size());
-                            if (lTabu2.get(fil).getSolutionList()[col] >= 0)
+                            if (lTabu2.get(fil).getSolutionList()[col] > 0)
                                 tabu = true;
                         }
 
@@ -289,6 +289,7 @@ public class TabuSearch {
                     lTabu.remove(0);
                 }
                 lTabu.add(SolActual);
+                lTabu2.add(SolActual);
             } else {
                 //ACTUALIZO la memoria de frecuencias
                 for (int k = 0; k < tam; k++) {
@@ -298,6 +299,7 @@ public class TabuSearch {
                     lTabu.remove(0);
                 }
                 lTabu.add(mejorPeores);
+                lTabu2.add(mejorPeores);
             }
 
             //ACTUALIZO tabu2 con pares de intercambio
@@ -392,7 +394,7 @@ public class TabuSearch {
                 }
 
                 //iniciamos esta variable para los empeoramientos
-                CosteMejorMomentoAnt = 0;
+                //CosteMejorMomentoAnt = 0;
 
                 // Borramos la matriz de frecuencias
                 for (int i = 0; i < tam; i++)
