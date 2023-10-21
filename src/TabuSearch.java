@@ -333,13 +333,14 @@ public class TabuSearch {
                 }
                 //CosteMejorPeor++;
                 //Para los del viernes
-                int random;
+                double random;
                 int contador=0;
                 int cantidad=tam/4;
+                System.out.println("antes dlb " + Arrays.toString(dlb));
                 for (int i = 0; i < tam; i++) {
                     if(contador <= cantidad){
                         contador++;
-                        random= rand.nextInt(0, 1);
+                        random= rand.nextDouble();
                         if(random < 0.5){
                             dlb[i] = 0;
                         }else{
@@ -349,6 +350,7 @@ public class TabuSearch {
                         dlb[i] = 1;
                     }
                 }
+                System.out.println("despues dlb " + Arrays.toString(dlb));
                 System.out.println("dlb generada: " + Arrays.toString(dlb));
                 // y lo reorganizamos al azar
                 int r;
