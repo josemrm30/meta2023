@@ -50,7 +50,7 @@ public class Multiarranque {
         int mejorCoste = Integer.MAX_VALUE;
 
         Solution SolActual;
-        SolActual = mejorSol;
+        SolActual =  new Solution(mejorSol);
 
         for (int i = 0; i < tam; i++) {
 
@@ -60,7 +60,7 @@ public class Multiarranque {
             System.out.println("DESPUES:" + Arrays.toString(SolActual.getSolutionList()));
             int coste = SolActual.getCost();
             if (coste < mejorCoste) {
-                mejorSol = SolActual;
+                mejorSol.setSolutionList(SolActual.getSolutionList()) ;
                 mejorCoste = coste;
             }
             //swap list

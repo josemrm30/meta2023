@@ -6,8 +6,7 @@ import java.util.Arrays;
 public class Solution {
 
     private int cost;
-    private final int[] solutionList;
-
+    private int[] solutionList;
 
     public Solution(int size) {
         solutionList = new int[size];
@@ -27,6 +26,11 @@ public class Solution {
 
     public void setSolutionList(int[] solution){
         solutionList = solution;
+    }
+
+    public Solution(Solution other) {
+        this.cost = other.cost;
+        this.solutionList = Arrays.copyOf(other.solutionList, other.solutionList.length);
     }
 
     @Override

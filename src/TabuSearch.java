@@ -15,7 +15,7 @@ public class TabuSearch {
     private int Tabuprob;
     private int Tenenciatabu;
 
-    public TabuSearch(Problem problem, int iterations, long seed,int Tabuprob, Logger log, int tenenciaTabu) {
+    public TabuSearch(Problem problem, int iterations, long seed, int Tabuprob, Logger log, int tenenciaTabu) {
         this.problem = problem;
         this.iterations = iterations;
         this.Tabuprob = Tabuprob;
@@ -32,7 +32,7 @@ public class TabuSearch {
     }
 
 
-    public void generaDLB25(int []dlb, int tam){
+    public void generaDLB25(int[] dlb, int tam) {
         for (int i = 0; i < tam; i++) {
             if (i < tam / 4)
                 dlb[i] = rand.nextInt(0, 1);
@@ -157,11 +157,10 @@ public class TabuSearch {
 
 
     int TabuSearch(int[][] flu, int[][] loc,
-                    int tam, int evaluaciones, int tenenciaTabu, int estancamientos,
-                    Solution SolActual) {
+                   int tam, int evaluaciones, int tenenciaTabu, int estancamientos,
+                   Solution SolActual) {
 
-        int contadorTenencia = 0;
-        int tipo, contador;
+        int tipo, contEstanca;
         //Calculamos el coste de la Solucion inicial
         int CosteActual = actualSolution.getCost();
         //costes de soluciones de apoyo
@@ -169,13 +168,13 @@ public class TabuSearch {
         int CosteMejorMomentoAnt = 0;
 
         //calculo de veces q mejora o no la reinicializacion
-        int OEMejoraI = 0, OEnoMejoraI = 0, OEMejoraD = 0, OEnoMejoraD = 0, osc = 0;
+        int OEMejoraInte = 0, OEnoMejoraInte = 0, OEMejoraDive = 0, OEnoMejoraDive = 0, osc = 0;
         Solution aux = new Solution(tam);
         Solution aux2 = new Solution(tam);
         //memorias a corto y largo plazo
 
         //memoria de frecuencias
-        int[][] memFrec = new int[tam+1][tam+1];
+        int[][] memFrec = new int[tam][tam];
 
         for (int i = 0; i < tam; i++)
             for (int j = 0; j < tam; j++)
@@ -204,7 +203,7 @@ public class TabuSearch {
 
         int iter = 0;
 
-        contador = 0;
+        contEstanca = 0;
         boolean mejora;
         int pos = rand.nextInt(0, tam - 1);//random para darle dinamismo inicialmente //PARA ANOTAR LA ULTIMA POSICIÓN DE INTERCAMBIO ANTERIOR
 
@@ -218,7 +217,7 @@ public class TabuSearch {
             //tipo=pos;     //SI NO HAY CARGA ALEATORIA ESTA OPCION DA EL MISMO RESULTADO AUN CAMBIANDO SEMILLA
             tipo = rand.nextInt(0, tam - 1);   //PRIMERA UNIDAD DE INTERCAMBIO ALEATORIA
 
-            CosteMejorPeor = Integer.MAX_VALUE;  //cada iteracion
+            //CosteMejorPeor = Integer.MAX_VALUE;  //cada iteracion
             int fil = 0, col = 0;
             //comenzar por el principio y llegar hasta el punto de partida
             for (int i = tipo, cont = 0; cont < tam && !mejora; i++, cont++) {
@@ -241,13 +240,13 @@ public class TabuSearch {
                                 break;
                             }
                         }
-
-
                         if (!tabu) {
                             //vemos si es Tabu con la segunda Lista Tabu
                             fil = i;
                             col = j;
+                            System.out.println("no Tabu ");
                             if (fil > col) swap(lTabu2, fil, col);
+                            System.out.println("intercambio fila:" + fil + " por columna: " + col);
                             System.out.println(lTabu2.length);
                             if (lTabu2[fil][col] > 0)
                                 tabu = true;
@@ -271,6 +270,7 @@ public class TabuSearch {
                                 mejora = true;
                             } else {
                                 if (C < CosteMejorPeor) {  //ojo como actualiza
+                                    System.out.println("actualiza mejor peor");
                                     CosteMejorPeor = C;
                                     aux.setSolutionList(SolActual.getSolutionList());
                                     swapSolution(aux, i, j);
@@ -294,7 +294,7 @@ public class TabuSearch {
             if (mejora) {
                 //ACTUALIZO la memoria de frecuencias
                 for (int k = 0; k < tam; k++) {
-                    memFrec[k][SolActual.getSolutionList()[k]]++;
+                    memFrec[k][SolActual.getSolutionList()[k]-1]++;
                 }
                 if (lTabu.size() >= tenenciaTabu) {
                     lTabu.remove(0);
@@ -303,7 +303,7 @@ public class TabuSearch {
             } else {
                 //ACTUALIZO la memoria de frecuencias
                 for (int k = 0; k < tam; k++) {
-                    memFrec[k][mejorPeores.getSolutionList()[k]]++;
+                    memFrec[k][mejorPeores.getSolutionList()[k]-1]++;
                 }
                 if (lTabu.size() >= tenenciaTabu) {
                     lTabu.remove(0);
@@ -324,7 +324,7 @@ public class TabuSearch {
 
             if (!mejora) {
 
-                contador++;
+                contEstanca++;
 
                 if (CosteMejorPeor != Integer.MAX_VALUE) { //evita posibles dlb nuevas con todo 1's
                     CosteActual = CosteMejorPeor;
@@ -349,10 +349,10 @@ public class TabuSearch {
             } else {
 
                 if (CosteMejorMomentoAnt > CosteActual) {  //Asi es la ultima forma que ha dicho
-                    contador = 0;
+                    contEstanca = 0;
                     CosteMejorMomentoAnt = CosteActual;
                 } else
-                    contador++;
+                    contEstanca++;
 
                 if (CosteActual < CGlobal) {
                     CGlobal = CosteActual;
@@ -361,27 +361,27 @@ public class TabuSearch {
                 }
             }
 
-            if (contador == estancamientos) {
+            if (contEstanca == estancamientos) {
                 System.out.println("** Reinicializo");
                 if (osc == 0) {
                     if (CosteMejorMomento > CosteActual) {
                         CosteMejorMomento = CosteActual;
-                        OEMejoraD++;
+                        OEMejoraDive++;
 
                     } else {
-                        OEnoMejoraD++;
+                        OEnoMejoraDive++;
                     }
                 } else {
                     if (CosteMejorMomento > CosteActual) {
                         CosteMejorMomento = CosteActual;
-                        OEMejoraI++;
+                        OEMejoraInte++;
 
                     } else {
-                        OEnoMejoraI++;
+                        OEnoMejoraInte++;
                     }
                 }
 
-                contador = 0;
+                contEstanca = 0;
                 int prob = rand.nextInt(1, tam);
                 //mostrarmatriz(memFrec);
                 if (prob <= Tabuprob) {
@@ -434,8 +434,8 @@ public class TabuSearch {
 
         }
 
-        System.out.println("MEJORAS-D: " + OEMejoraD + " NO MEJORAS-D: " + OEnoMejoraD);
-        System.out.println("MEJORAS-I: " + OEMejoraI + " NO MEJORAS-I: " + OEnoMejoraI);
+        System.out.println("MEJORAS-D: " + OEMejoraDive + " NO MEJORAS-D: " + OEnoMejoraDive);
+        System.out.println("MEJORAS-I: " + OEMejoraInte + " NO MEJORAS-I: " + OEnoMejoraInte);
 
         SolActual = SolGlobal;
         return CGlobal;
