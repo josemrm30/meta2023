@@ -1,3 +1,4 @@
+import java.sql.Array;
 import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Random;
@@ -332,16 +333,27 @@ public class TabuSearch {
                 }
                 //CosteMejorPeor++;
                 //Para los del viernes
+                int random;
+                int contador=0;
+                int cantidad=tam/4;
                 for (int i = 0; i < tam; i++) {
-                    if (i < tam / 4)
-                        dlb[i] = rand.nextInt(0, 1);
-                    else
+                    if(contador <= cantidad){
+                        contador++;
+                        random= rand.nextInt(0, 1);
+                        if(random < 0.5){
+                            dlb[i] = 0;
+                        }else{
+                            dlb[i] = 1;
+                        }
+                    }else{
                         dlb[i] = 1;
+                    }
                 }
+                System.out.println("dlb generada: " + Arrays.toString(dlb));
                 // y lo reorganizamos al azar
                 int r;
                 for (int i = tam - 1; i > 0; i--) {
-                    r = rand.nextInt(0, 1);
+                    r = rand.nextInt(0, tam);
                     //intercambio de elementos
                     swapSolution(dlb, i, r);
                 }
@@ -390,7 +402,6 @@ public class TabuSearch {
                 } else {
                     osc = 1;
                     masVisitados(memFrec, nuevaSol);
-
                 }
 
                 actualSolution = nuevaSol;
@@ -430,6 +441,10 @@ public class TabuSearch {
             System.out.println("Coste Actual: " + CosteActual);
             System.out.println("Coste MejorPeor: " + CosteMejorPeor);
             System.out.println("Coste Mejor Global: " + CGlobal);
+            System.out.println(Arrays.toString(dlb));
+//            for (int i = 0; i < memFrec.length; i++) {
+//                System.out.println(Arrays.toString(memFrec[i]));
+//            }
 
 
         }
