@@ -168,7 +168,7 @@ public class TabuSearch {
 
         int tipo, estancaCont;
         //Calculamos el coste de la Solucion inicial
-        int CosteActual = actualSolution.getCost();
+        int CosteActual = SolActual.getCost();
         int[] sol = new int[tam];
 //        for(int i = 0; i < tam; i++){
 //             sol[i]=actualSolution.getSolutionList()[i]-1;
@@ -195,9 +195,8 @@ public class TabuSearch {
         //lista tabu explicita (solución entera)
         ArrayList<Solution> lTabu = new ArrayList<>();
 
-
         //metemos la solucion inicial en tabu
-        lTabu.add(actualSolution);
+        lTabu.add(SolActual);
         //lista tabu implicita (movimientos)
         int[][] lTabu2 = new int[tam][tam];
 
@@ -242,13 +241,13 @@ public class TabuSearch {
 
                         //vemos si es Tabu con la primera Lista Tabu
                         boolean tabu = false;
-                        aux2 = SolActual;
-                        Solution newSol = new Solution(swapSolution(aux2, i, j));
-                        //boolean iguales = Arrays.equals(SolActual.getSolutionList(), newSol.getSolutionList());
-                        //System.out.println(iguales);
+                        Solution newSol = new Solution(swapSolution(SolActual, i, j));
+                        boolean iguales = Arrays.equals(SolActual.getSolutionList(), newSol.getSolutionList());
+                        System.out.println("iguales: " + iguales);
                         for (int l = 0; l < lTabu.size(); l++) {
                             if (lTabu.get(l).getSolutionList() == newSol.getSolutionList()) {
                                 tabu = true;  //esta en lista tabu
+                                System.out.println("es tabu: " + tabu);
                                 break;
                             }
                         }
@@ -272,7 +271,6 @@ public class TabuSearch {
                                 //iter++; //YA esta PUESTO ARRIBA
                                 CosteActual = C;
                                 SolActual = (swapSolution(SolActual, i, j));
-
                                 filuni = i;
                                 colpos = j;  //me quedo el par de intercambio
 
@@ -287,7 +285,7 @@ public class TabuSearch {
                                     posmejorPeores.setSolutionList(SolActual.getSolutionList());
                                     posmejorPeores.setCost(SolActual.getCost());
                                     mejorPeores = swapSolution(posmejorPeores, i, j);
-
+                                    //estancaCont++;
                                     filuni = i;
                                     colpos = j; //me quedo el par de intercambio
                                 }
@@ -307,7 +305,7 @@ public class TabuSearch {
                 for (int k = 0; k < tam; k++) {
                     memFrec[k][SolActual.getSolutionList()[k]]++;
                 }
-                if (lTabu.size() >= tenenciaTabu) {
+                if (lTabu.size() == tenenciaTabu) {
                     lTabu.remove(0);
                 }
                 lTabu.add(SolActual);
@@ -317,7 +315,7 @@ public class TabuSearch {
                 for (int k = 0; k < tam; k++) {
                     memFrec[k][mejorPeores.getSolutionList()[k]]++;
                 }
-                if (lTabu.size() >= tenenciaTabu) {
+                if (lTabu.size() == tenenciaTabu) {
                     lTabu.remove(0);
                 }
                 lTabu.add(mejorPeores);
@@ -351,7 +349,7 @@ public class TabuSearch {
                 if (CosteMejorMomentoAnt > CosteActual) {  //Asi es la ultima forma que ha dicho
                     estancaCont = 0;
                     CosteMejorMomentoAnt = CosteActual;
-                }
+                } else
                     estancaCont++;
 
                 if (CosteActual < CGlobal) {
@@ -360,7 +358,7 @@ public class TabuSearch {
                 }
             }
 
-            if (estancaCont == estancamientosMax) {
+            if (estancaCont >= estancamientosMax) {
                 System.out.println("** Reinicializo");
                 if (osc == 0) {
                     if (CosteMejorMomento > CosteActual) {
@@ -390,11 +388,11 @@ public class TabuSearch {
                     osc = 1;
                     masVisitados(memFrec, nuevaSol);
                 }
-                System.out.println("act solucion: " + Arrays.toString(actualSolution.getSolutionList()) + actualSolution.getSolutionList().length);
-                actualSolution.setSolutionList(nuevaSol.getSolutionList());
-                actualSolution.setCost(nuevaSol.getCost());
-                CosteActual = actualSolution.getCost();
-                System.out.println("nue solucion: " + Arrays.toString(actualSolution.getSolutionList()) + actualSolution.getSolutionList().length);
+                System.out.println("act solucion: " + Arrays.toString(SolActual.getSolutionList()) + SolActual.getSolutionList().length);
+                SolActual.setSolutionList(nuevaSol.getSolutionList());
+                SolActual.setCost(nuevaSol.getCost());
+                CosteActual = SolActual.getCost();
+                System.out.println("nue solucion: " + Arrays.toString(SolActual.getSolutionList()) + SolActual.getSolutionList().length);
                 CosteMejorMomentoAnt = 0;
                 if (CosteActual < CGlobal) {
                     CGlobal = CosteActual;
