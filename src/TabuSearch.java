@@ -109,11 +109,11 @@ public class TabuSearch {
     }
 
     public Solution swapSolution(Solution actualSolution, int i, int j) {
-        System.out.println("dato i: " + actualSolution.getSolutionList()[i] + " dato j: " + actualSolution.getSolutionList()[j]);
+        //System.out.println("dato i: " + actualSolution.getSolutionList()[i] + " dato j: " + actualSolution.getSolutionList()[j]);
         int temp = actualSolution.getSolutionList()[i];
         actualSolution.getSolutionList()[i] = actualSolution.getSolutionList()[j];
         actualSolution.getSolutionList()[j] = temp;
-        System.out.println("dato i: " + actualSolution.getSolutionList()[i] + " dato j: " + actualSolution.getSolutionList()[j]);
+        //System.out.println("dato i: " + actualSolution.getSolutionList()[i] + " dato j: " + actualSolution.getSolutionList()[j]);
         return actualSolution;
     }
 
@@ -140,7 +140,6 @@ public class TabuSearch {
         double random;
         int contador = 0;
         int cantidad = tam / 4;
-        System.out.println("antes dlb " + Arrays.toString(dlb));
         for (int i = 0; i < tam; i++) {
             if (contador <= cantidad) {
                 contador++;
@@ -161,14 +160,13 @@ public class TabuSearch {
             dlb[i] = dlb[j];
             dlb[j] = temp;
         }
-        System.out.println("despues dlb " + Arrays.toString(dlb));
     }
 
     int TabuSearch(int[][] flu, int[][] loc,
-                   int tam, int evaluaciones, int tenenciaTabu, int estancamientos,
+                   int tam, int evaluaciones, int tenenciaTabu, int estancamientosMax,
                    Solution SolActual) {
 
-        int tipo, contEstanca;
+        int tipo, estancaCont;
         //Calculamos el coste de la Solucion inicial
         int CosteActual = actualSolution.getCost();
         //costes de soluciones de apoyo
@@ -206,12 +204,11 @@ public class TabuSearch {
 
 
         //inicializo la dlb
-        for (int k = 0; k < tam; k++)
-            dlb[k] = 0;
+        dlb25(dlb,tam);
 
         int iter = 0;
 
-        contEstanca = 0;
+        estancaCont = 0;
         boolean mejora;
         int pos = rand.nextInt(0, tam - 1);//random para darle dinamismo inicialmente //PARA ANOTAR LA ULTIMA POSICIÓN DE INTERCAMBIO ANTERIOR
 
@@ -225,7 +222,7 @@ public class TabuSearch {
             //tipo=pos;     //SI NO HAY CARGA ALEATORIA ESTA OPCION DA EL MISMO RESULTADO AUN CAMBIANDO SEMILLA
             //tipo = rand.nextInt(0, tam - 1);   //PRIMERA UNIDAD DE INTERCAMBIO ALEATORIA
 
-            //CosteMejorPeor = Integer.MAX_VALUE;  //cada iteracion
+            CosteMejorPeor = Integer.MAX_VALUE;  //cada iteracion
             int filuni = -1, colpos = -1;
             //comenzar por el principio y llegar hasta el punto de partida
             for (int i = pos, cont = 0; cont < tam && !mejora; i++, cont++) {
@@ -241,8 +238,8 @@ public class TabuSearch {
                         boolean tabu = false;
                         aux2 = SolActual;
                         Solution newSol = new Solution(swapSolution(aux2, i, j));
-                        boolean iguales = Arrays.equals(SolActual.getSolutionList(), newSol.getSolutionList());
-                        System.out.println(iguales);
+                        //boolean iguales = Arrays.equals(SolActual.getSolutionList(), newSol.getSolutionList());
+                        //System.out.println(iguales);
                         for (int l = 0; l < lTabu.size(); l++) {
                             if (lTabu.get(l).getSolutionList() == newSol.getSolutionList()) {
                                 tabu = true;  //esta en lista tabu
@@ -253,11 +250,10 @@ public class TabuSearch {
                             //vemos si es Tabu con la segunda Lista Tabu
                             filuni = i;
                             colpos = j;
-                            System.out.println("no Tabu ");
+                            //System.out.println("no Tabu ");
                             if (filuni > colpos)
                                 lTabu2 = swap(lTabu2, filuni, colpos); //Para trabajar con la triangular superior
-                            System.out.println("intercambio fila:" + filuni + " por columna: " + colpos);
-                            System.out.println(lTabu2.length);
+
                             if (lTabu2[filuni][colpos] > 0)
                                 tabu = true;
                         }
@@ -280,11 +276,11 @@ public class TabuSearch {
                                 mejora = true;
                             } else {
                                 if (C < CosteMejorPeor) {  //ojo como actualiza
-                                    System.out.println("actualiza mejor peor");
+                                    //System.out.println("actualiza mejor peor");
                                     CosteMejorPeor = C;
                                     posmejorPeores.setSolutionList(SolActual.getSolutionList());
-                                    swapSolution(posmejorPeores, i, j);
-                                    mejorPeores = posmejorPeores;
+                                    posmejorPeores.setCost(SolActual.getCost());
+                                    mejorPeores = swapSolution(posmejorPeores, i, j);
 
                                     filuni = i;
                                     colpos = j; //me quedo el par de intercambio
@@ -309,6 +305,7 @@ public class TabuSearch {
                     lTabu.remove(0);
                 }
                 lTabu.add(SolActual);
+
             } else {
                 //ACTUALIZO la memoria de frecuencias
                 for (int k = 0; k < tam; k++) {
@@ -333,7 +330,7 @@ public class TabuSearch {
             lTabu2[filuni][colpos] = tenenciaTabu;
 
             if (!mejora) {
-                contEstanca++;
+                estancaCont++;
 
                 if (CosteMejorPeor != Integer.MAX_VALUE) { //evita posibles dlb nuevas con todo 1's
                     CosteActual = CosteMejorPeor;
@@ -346,10 +343,10 @@ public class TabuSearch {
             } else {
 
                 if (CosteMejorMomentoAnt > CosteActual) {  //Asi es la ultima forma que ha dicho
-                    contEstanca = 0;
+                    estancaCont = 0;
                     CosteMejorMomentoAnt = CosteActual;
                 } else
-                    contEstanca++;
+                    estancaCont++;
 
                 if (CosteActual < CGlobal) {
                     CGlobal = CosteActual;
@@ -357,7 +354,7 @@ public class TabuSearch {
                 }
             }
 
-            if (contEstanca == estancamientos) {
+            if (estancaCont == estancamientosMax) {
                 System.out.println("** Reinicializo");
                 if (osc == 0) {
                     if (CosteMejorMomento > CosteActual) {
@@ -377,7 +374,7 @@ public class TabuSearch {
                     }
                 }
 
-                contEstanca = 0;
+                estancaCont = 0;
                 int prob = rand.nextInt(1, tam);
                 //mostrarmatriz(memFrec);
                 if (prob <= Tabuprob) {
@@ -388,7 +385,8 @@ public class TabuSearch {
                     masVisitados(memFrec, nuevaSol);
                 }
                 System.out.println("act solucion: " + Arrays.toString(actualSolution.getSolutionList()) + actualSolution.getSolutionList().length);
-                actualSolution = nuevaSol;
+                actualSolution.setSolutionList(nuevaSol.getSolutionList());
+                actualSolution.setCost(nuevaSol.getCost());
                 CosteActual = actualSolution.getCost();
                 System.out.println("nue solucion: " + Arrays.toString(actualSolution.getSolutionList()) + actualSolution.getSolutionList().length);
                 CosteMejorMomentoAnt = 0;
@@ -398,7 +396,7 @@ public class TabuSearch {
                 }
 
                 //iniciamos esta variable para los empeoramientos
-                //CosteMejorMomentoAnt = 0;
+                CosteMejorMomentoAnt = 0;
 
                 // Borramos la matriz de frecuencias
                 for (int i = 0; i < tam; i++)
@@ -414,12 +412,12 @@ public class TabuSearch {
 
                 //reinicializamos la dlb
 
-                for (int i = 0; i < tam; i++) {
-                    dlb[i] = 0;
-                }
+
+                dlb25(dlb,tam);
             }
 
             System.out.println();
+            System.out.println("estancamiento: " + estancaCont);
             System.out.println("Paso = " + iter);
             System.out.println("Coste Actual: " + CosteActual);
             System.out.println("Coste MejorPeor: " + CosteMejorPeor);
