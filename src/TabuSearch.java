@@ -91,10 +91,10 @@ public class TabuSearch {
     private int Factorization2Opt(int[][] flow, int[][] loc, int tam, Solution actualSolution, int ActualCost, int r, int s) {
         for (int k = 0; k < tam; k++) {
             if (k != r && k != s) {
-                ActualCost += flow[r][k] * (loc[actualSolution.getSolutionList()[s] - 1][actualSolution.getSolutionList()[k] - 1] - loc[actualSolution.getSolutionList()[r] - 1][actualSolution.getSolutionList()[k] - 1]) +
-                        flow[s][k] * (loc[actualSolution.getSolutionList()[r] - 1][actualSolution.getSolutionList()[k] - 1] - loc[actualSolution.getSolutionList()[s] - 1][actualSolution.getSolutionList()[k] - 1]) +
-                        flow[k][r] * (loc[actualSolution.getSolutionList()[k] - 1][actualSolution.getSolutionList()[s] - 1] - loc[actualSolution.getSolutionList()[k] - 1][actualSolution.getSolutionList()[r] - 1]) +
-                        flow[k][s] * (loc[actualSolution.getSolutionList()[k] - 1][actualSolution.getSolutionList()[r] - 1] - loc[actualSolution.getSolutionList()[k] - 1][actualSolution.getSolutionList()[s] - 1]);
+                ActualCost += flow[r][k] * (loc[actualSolution.getSolutionList()[s]][actualSolution.getSolutionList()[k]] - loc[actualSolution.getSolutionList()[r]][actualSolution.getSolutionList()[k]]) +
+                        flow[s][k] * (loc[actualSolution.getSolutionList()[r]][actualSolution.getSolutionList()[k]] - loc[actualSolution.getSolutionList()[s]][actualSolution.getSolutionList()[k]]) +
+                        flow[k][r] * (loc[actualSolution.getSolutionList()[k]][actualSolution.getSolutionList()[s]] - loc[actualSolution.getSolutionList()[k]][actualSolution.getSolutionList()[r]]) +
+                        flow[k][s] * (loc[actualSolution.getSolutionList()[k]][actualSolution.getSolutionList()[r]] - loc[actualSolution.getSolutionList()[k]][actualSolution.getSolutionList()[s]]);
             }
         }
         return ActualCost;
@@ -154,8 +154,8 @@ public class TabuSearch {
             }
         }
         // y lo reorganizamos al azar
-        for (int i = tam - 1; i >= 0; i--) {
-            int j = rand.nextInt(i + 1);
+        for (int i = tam - 1; i > 0; i--) {
+            int j = rand.nextInt(i+1);
             int temp = dlb[i];
             dlb[i] = dlb[j];
             dlb[j] = temp;
@@ -186,7 +186,7 @@ public class TabuSearch {
         //memorias a corto y largo plazo
 
         //memoria de frecuencias
-        int[][] memFrec = new int[tam + 1][tam + 1];
+        int[][] memFrec = new int[tam][tam];
 
         for (int i = 0; i < tam; i++)
             for (int j = 0; j < tam; j++)
@@ -351,7 +351,7 @@ public class TabuSearch {
                 if (CosteMejorMomentoAnt > CosteActual) {  //Asi es la ultima forma que ha dicho
                     estancaCont = 0;
                     CosteMejorMomentoAnt = CosteActual;
-                } else
+                }
                     estancaCont++;
 
                 if (CosteActual < CGlobal) {
