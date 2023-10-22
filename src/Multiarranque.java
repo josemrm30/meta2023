@@ -64,8 +64,13 @@ public class Multiarranque {
                 mejorCoste = coste;
             }
             //swap list
-            int p1 = rand.nextInt(0, tam - 1);
-            int p2 = rand.nextInt(0, tam - 1);
+            int p1 = rand.nextInt(0, tam);
+            int p2 = rand.nextInt(0, tam);
+            if(p1 > p2){
+                int temp = p1;
+                p1 = p2;
+                p2 = temp;
+            }
             if ((p1 - p2) > tam/4) {
                 swapSolution(SolActual, p1, p2);
                 for (int k = p1, j = p2; k < j; k++, j--) {

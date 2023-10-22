@@ -25,7 +25,9 @@ public class Solution {
     }
 
     public void setSolutionList(int[] solution){
-        solutionList = solution;
+        for (int i = 0; i < solution.length; i++) {
+            solutionList[i] = solution[i];
+        }
     }
 
     public Solution(Solution other) {
