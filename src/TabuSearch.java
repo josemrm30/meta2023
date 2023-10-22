@@ -169,6 +169,12 @@ public class TabuSearch {
         int tipo, estancaCont;
         //Calculamos el coste de la Solucion inicial
         int CosteActual = actualSolution.getCost();
+        int[] sol = new int[tam];
+//        for(int i = 0; i < tam; i++){
+//             sol[i]=actualSolution.getSolutionList()[i]-1;
+//        }
+//        actualSolution.setSolutionList(sol);
+
         //costes de soluciones de apoyo
         int CosteMejorPeor = Integer.MAX_VALUE, CGlobal = Integer.MAX_VALUE, CosteMejorMomento = Integer.MAX_VALUE;
         int CosteMejorMomentoAnt = 0;
