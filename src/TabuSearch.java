@@ -296,7 +296,6 @@ public class TabuSearch {
                         dlb[i] = 1;
                     }
                 }
-
             }
             //UNA VEZ VISITO TODO EL VECINDARIO O HAY MEJORA
             //TENEMOS UN MOVIMIENTO Y ACTUALIZAMOS MEMORIAS
