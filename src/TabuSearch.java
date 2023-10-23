@@ -34,11 +34,10 @@ public class TabuSearch {
         int[] nuevaSol = provnuevaSol.getSolutionList();
         int tam = nuevaSol.length;
         int mayor = Integer.MIN_VALUE;
-        int pfuni = -1;
-        int pcloc = -1;
+        int pfuni = 0;
+        int pcloc = 0;
         boolean[] marcafuni = new boolean[tam];
         boolean[] marcacloc = new boolean[tam];
-
         for (int k = 0; k < tam; k++) {
             for (int i = 0; i < tam; i++) {
                 if (!marcafuni[i]) {
@@ -52,7 +51,6 @@ public class TabuSearch {
                 }
             }
             nuevaSol[pfuni] = pcloc;
-            provnuevaSol.setSolutionList(nuevaSol);
             marcafuni[pfuni] = true;
             marcacloc[pcloc] = true;
             mayor = Integer.MIN_VALUE;
@@ -63,8 +61,8 @@ public class TabuSearch {
         int tam = provnuevaSol.getSolutionList().length;
         int[] nuevaSol = provnuevaSol.getSolutionList();
         int menor = Integer.MAX_VALUE;
-        int pfuni = -1;
-        int pcloc = -1;
+        int pfuni = 0;
+        int pcloc = 0;
         boolean[] marcafuni = new boolean[tam];
         boolean[] marcacloc = new boolean[tam];
 
@@ -81,7 +79,6 @@ public class TabuSearch {
                 }
             }
             nuevaSol[pfuni] = pcloc;
-            provnuevaSol.setSolutionList(nuevaSol);
             marcafuni[pfuni] = true;
             marcacloc[pcloc] = true;
             menor = Integer.MAX_VALUE;
@@ -241,9 +238,10 @@ public class TabuSearch {
 
                         //vemos si es Tabu con la primera Lista Tabu
                         boolean tabu = false;
-                        Solution newSol = new Solution(swapSolution(SolActual, i, j));
-                        boolean iguales = Arrays.equals(SolActual.getSolutionList(), newSol.getSolutionList());
-                        System.out.println("iguales: " + iguales);
+                        Solution newSol = new Solution(SolActual);
+                        newSol = swapSolution(newSol,i,j);
+                        //boolean iguales = Arrays.equals(SolActual.getSolutionList(), newSol.getSolutionList());
+                        //System.out.println("iguales: " + iguales);
                         for (int l = 0; l < lTabu.size(); l++) {
                             if (lTabu.get(l).getSolutionList() == newSol.getSolutionList()) {
                                 tabu = true;  //esta en lista tabu
@@ -270,7 +268,10 @@ public class TabuSearch {
                             if (C < CosteActual) {
                                 //iter++; //YA esta PUESTO ARRIBA
                                 CosteActual = C;
-                                SolActual = (swapSolution(SolActual, i, j));
+                                System.out.println("solActual antes:" + SolActual);
+                                SolActual = swapSolution(SolActual, i, j);
+                                SolActual.setCost(C);
+                                System.out.println("solActual despu:" + SolActual);
                                 filuni = i;
                                 colpos = j;  //me quedo el par de intercambio
 
@@ -283,9 +284,9 @@ public class TabuSearch {
                                     //System.out.println("actualiza mejor peor");
                                     CosteMejorPeor = C;
                                     posmejorPeores.setSolutionList(SolActual.getSolutionList());
-                                    posmejorPeores.setCost(SolActual.getCost());
+                                    posmejorPeores.setCost(CosteMejorPeor);
                                     mejorPeores = swapSolution(posmejorPeores, i, j);
-                                    //estancaCont++;
+                                    estancaCont++;
                                     filuni = i;
                                     colpos = j; //me quedo el par de intercambio
                                 }
@@ -305,18 +306,12 @@ public class TabuSearch {
                 for (int k = 0; k < tam; k++) {
                     memFrec[k][SolActual.getSolutionList()[k]]++;
                 }
-                if (lTabu.size() == tenenciaTabu) {
-                    lTabu.remove(0);
-                }
                 lTabu.add(SolActual);
 
             } else {
                 //ACTUALIZO la memoria de frecuencias
                 for (int k = 0; k < tam; k++) {
                     memFrec[k][mejorPeores.getSolutionList()[k]]++;
-                }
-                if (lTabu.size() == tenenciaTabu) {
-                    lTabu.remove(0);
                 }
                 lTabu.add(mejorPeores);
             }
@@ -334,7 +329,7 @@ public class TabuSearch {
             lTabu2[filuni][colpos] = tenenciaTabu;
 
             if (!mejora) {
-                estancaCont++;
+                //estancaCont++;
 
                 if (CosteMejorPeor != Integer.MAX_VALUE) { //evita posibles dlb nuevas con todo 1's
                     CosteActual = CosteMejorPeor;
@@ -358,7 +353,7 @@ public class TabuSearch {
                 }
             }
 
-            if (estancaCont >= estancamientosMax) {
+            if (estancaCont == estancamientosMax) {
                 System.out.println("** Reinicializo");
                 if (osc == 0) {
                     if (CosteMejorMomento > CosteActual) {
@@ -379,8 +374,9 @@ public class TabuSearch {
                 }
 
                 estancaCont = 0;
-                int prob = rand.nextInt(1, tam);
+                int prob = rand.nextInt(1, 100);
                 //mostrarmatriz(memFrec);
+
                 if (prob <= Tabuprob) {
                     osc = 0;
                     menosVisitados(memFrec, nuevaSol);
@@ -388,7 +384,7 @@ public class TabuSearch {
                     osc = 1;
                     masVisitados(memFrec, nuevaSol);
                 }
-                System.out.println("act solucion: " + Arrays.toString(SolActual.getSolutionList()) + SolActual.getSolutionList().length);
+                System.out.println("act solucion: " + SolActual + SolActual.getSolutionList().length);
                 SolActual.setSolutionList(nuevaSol.getSolutionList());
                 SolActual.setCost(nuevaSol.getCost());
                 CosteActual = SolActual.getCost();
@@ -400,7 +396,7 @@ public class TabuSearch {
                 }
 
                 //iniciamos esta variable para los empeoramientos
-                CosteMejorMomentoAnt = 0;
+                CosteMejorMomentoAnt = Integer.MAX_VALUE;
 
                 // Borramos la matriz de frecuencias
                 for (int i = 0; i < tam; i++)
