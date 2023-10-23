@@ -57,7 +57,7 @@ public class TabuSearch {
         }
     }
 
-    void menosVisitados(int[][] mat, Solution provnuevaSol) {
+    void menosVisitados(int[][] memfrec, Solution provnuevaSol) {
         int tam = provnuevaSol.getSolutionList().length;
         int[] nuevaSol = provnuevaSol.getSolutionList();
         int menor = Integer.MAX_VALUE;
@@ -65,12 +65,13 @@ public class TabuSearch {
         int pcloc = 0;
         boolean[] marcafuni = new boolean[tam];
         boolean[] marcacloc = new boolean[tam];
+
         for (int k = 0; k < tam; k++) {
             for (int i = 0; i < tam; i++) {
                 if (!marcafuni[i]) {
                     for (int j = 0; j < tam; j++) {
-                        if (!marcacloc[j] && mat[i][j] <= menor) {
-                            menor = mat[i][j];
+                        if (!marcacloc[j] && memfrec[i][j] <= menor) {
+                            menor = memfrec[i][j];
                             pfuni = i;
                             pcloc = j;
                         }
@@ -267,10 +268,10 @@ public class TabuSearch {
                             if (C < CosteActual) {
                                 //iter++; //YA esta PUESTO ARRIBA
                                 CosteActual = C;
-                                System.out.println("solActual antes:" + SolActual);
+                                //System.out.println("solActual antes:" + SolActual);
                                 SolActual = swapSolution(SolActual, i, j);
                                 SolActual.setCost(C);
-                                System.out.println("solActual despu:" + SolActual);
+                                //System.out.println("solActual despu:" + SolActual);
                                 filuni = i;
                                 colpos = j;  //me quedo el par de intercambio
 
@@ -285,7 +286,6 @@ public class TabuSearch {
                                     posmejorPeores.setSolutionList(SolActual.getSolutionList());
                                     posmejorPeores.setCost(CosteMejorPeor);
                                     mejorPeores = swapSolution(posmejorPeores, i, j);
-                                    estancaCont++;
                                     filuni = i;
                                     colpos = j; //me quedo el par de intercambio
                                 }
