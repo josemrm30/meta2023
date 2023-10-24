@@ -225,7 +225,7 @@ public class TabuSearch {
             //tipo = rand.nextInt(0, tam - 1);   //PRIMERA UNIDAD DE INTERCAMBIO ALEATORIA
 
             CosteMejorPeor = Integer.MAX_VALUE;  //cada iteracion
-            int filuni = -1, colpos = -1;
+            int filuni = 0, colpos = 0;
             //comenzar por el principio y llegar hasta el punto de partida
             for (int i = pos, cont = 0; cont < tam && !mejora; i++, cont++) {
                 if (i == tam) i = 0;  //para que cicle
@@ -385,9 +385,9 @@ public class TabuSearch {
                 }
                 System.out.println("act solucion: " + SolActual + SolActual.getSolutionList().length);
                 SolActual.setSolutionList(nuevaSol.getSolutionList());
-                SolActual.setCost(nuevaSol.getCost());
+                SolActual.setCost(Factorization2Opt(flu, loc, tam, SolActual, CosteActual, filuni, colpos));
                 CosteActual = SolActual.getCost();
-                System.out.println("nue solucion: " + Arrays.toString(SolActual.getSolutionList()) + SolActual.getSolutionList().length);
+                System.out.println("nue solucion: " + SolActual + Arrays.toString(SolActual.getSolutionList()) + SolActual.getSolutionList().length);
                 CosteMejorMomentoAnt = 0;
                 if (CosteActual < CGlobal) {
                     CGlobal = CosteActual;
@@ -395,7 +395,7 @@ public class TabuSearch {
                 }
 
                 //iniciamos esta variable para los empeoramientos
-                CosteMejorMomentoAnt = Integer.MAX_VALUE;
+                CosteMejorMomentoAnt = 0;
 
                 // Borramos la matriz de frecuencias
                 for (int i = 0; i < tam; i++)
