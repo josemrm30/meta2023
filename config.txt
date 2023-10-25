@@ -1,4 +1,4 @@
-Files=ford04.dat
+Files=ford01.dat
 Seeds=25265192
 Algorithms=TabuSearch
 ConsoleLog=False

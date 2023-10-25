@@ -15,6 +15,18 @@ public class TabuSearch {
     private int Tabuprob;
     private int Tenenciatabu;
 
+
+    public int Cost(int[][] flow, int[][] loc, int[] sol,int tam) {
+        int cost = 0;
+        for (int i = 0; i < tam; i++) {
+            for (int j = 0; j < tam; j++) {
+                if (i != j) {
+                    cost += flow[i][j] * loc[sol[i]][sol[j]];
+                }
+            }
+        }
+        return cost;
+    }
     public TabuSearch(Problem problem, int iterations, long seed, int Tabuprob, Logger log, int tenenciaTabu) {
         this.problem = problem;
         this.iterations = iterations;
@@ -96,8 +108,29 @@ public class TabuSearch {
         }
         return ActualCost;
     }
+    private int Factorization2Opt2(int[][] flow, int[][] loc, int tam, Solution actualSolution, int ActualCost, int i, int j) {
+        int actualCost= 0;
+        for (int k = 0; k < tam; k++) {
+            if(k!=i && k!=j){
+                actualCost += flow[i][k] * (loc[actualSolution.getSolutionList()[j]][actualSolution.getSolutionList()[k]] - loc[actualSolution.getSolutionList()[i]][actualSolution.getSolutionList()[k]]);
+                actualCost += flow[j][k] * (loc[actualSolution.getSolutionList()[i]][actualSolution.getSolutionList()[k]] - loc[actualSolution.getSolutionList()[j]][actualSolution.getSolutionList()[k]]);
+            }
+        }
+    return actualCost;
+    }
 
-    public int[] swapSolution(int[] actualSolution, int i, int j) {
+    private int Factorization2Opt3(int[][] flow, int[][] loc, int tam, Solution actualSolution, int ActualCost, int r, int s) {
+        int actualCost = 0;
+        for (int k = 0;0 < r && r < s && k < tam; k++) {
+            if(k != r && k != s){
+                s+= 2*(flow[k][r] - flow[k][s]) * (loc[actualSolution.getSolutionList()[k]][actualSolution.getSolutionList()[s]] - loc[actualSolution.getSolutionList()[k]][actualSolution.getSolutionList()[r]]);
+            }
+        }
+        return actualCost;
+    }
+
+
+            public int[] swapSolution(int[] actualSolution, int i, int j) {
         int[] newSol = actualSolution.clone();
         int temp = newSol[i];
         newSol[i] = newSol[j];
@@ -125,6 +158,16 @@ public class TabuSearch {
         lTabu[fil].getSolutionList()[col] = lTabu[col].getSolutionList()[fil];
         lTabu[col].getSolutionList()[fil] = temp;
     }
+
+    public void swap(int fila,int columna){
+
+        int temp = fila;
+        fila = columna;
+        columna = temp;
+
+    }
+
+
 
     public int[][] swap(int[][] lTabu, int fil, int col) {
         int temp = lTabu[fil][col];
@@ -163,14 +206,9 @@ public class TabuSearch {
                    int tam, int evaluaciones, int tenenciaTabu, int estancamientosMax,
                    Solution SolActual) {
 
-        int tipo, estancaCont;
+        int estancaCont;
         //Calculamos el coste de la Solucion inicial
         int CosteActual = SolActual.getCost();
-        int[] sol = new int[tam];
-//        for(int i = 0; i < tam; i++){
-//             sol[i]=actualSolution.getSolutionList()[i]-1;
-//        }
-//        actualSolution.setSolutionList(sol);
 
         //costes de soluciones de apoyo
         int CosteMejorPeor = Integer.MAX_VALUE, CGlobal = Integer.MAX_VALUE, CosteMejorMomento = Integer.MAX_VALUE;
@@ -254,8 +292,13 @@ public class TabuSearch {
                             filuni = i;
                             colpos = j;
                             //System.out.println("no Tabu ");
-                            if (filuni > colpos)
-                                lTabu2 = swap(lTabu2, filuni, colpos); //Para trabajar con la triangular superior
+                            if (filuni > colpos){
+                                int temp= filuni;
+                                filuni= colpos;
+                                colpos = temp;
+                            }
+
+                                 //swap (filuni, colpos); //Para trabajar con la triangular superior
 
                             if (lTabu2[filuni][colpos] > 0)
                                 tabu = true;
@@ -324,11 +367,16 @@ public class TabuSearch {
                 }
             }
 
-            if (filuni > colpos) lTabu2 = swap(lTabu2, filuni, colpos);
+            if (filuni > colpos) {
+                int temp = filuni;
+                filuni= colpos;
+                colpos = temp;
+            }
+                //swap(filuni, colpos);
             lTabu2[filuni][colpos] = tenenciaTabu;
 
             if (!mejora) {
-                //estancaCont++;
+                estancaCont++;
 
                 if (CosteMejorPeor != Integer.MAX_VALUE) { //evita posibles dlb nuevas con todo 1's
                     CosteActual = CosteMejorPeor;
@@ -385,9 +433,9 @@ public class TabuSearch {
                 }
                 System.out.println("act solucion: " + SolActual + SolActual.getSolutionList().length);
                 SolActual.setSolutionList(nuevaSol.getSolutionList());
-                SolActual.setCost(Factorization2Opt(flu, loc, tam, SolActual, CosteActual, filuni, colpos));
+                SolActual.setCost(Cost(flu, loc, SolActual.getSolutionList(), tam));
                 CosteActual = SolActual.getCost();
-                System.out.println("nue solucion: " + SolActual + Arrays.toString(SolActual.getSolutionList()) + SolActual.getSolutionList().length);
+                System.out.println("nue solucion: " + SolActual + SolActual.getSolutionList().length);
                 CosteMejorMomentoAnt = 0;
                 if (CosteActual < CGlobal) {
                     CGlobal = CosteActual;
@@ -395,7 +443,7 @@ public class TabuSearch {
                 }
 
                 //iniciamos esta variable para los empeoramientos
-                CosteMejorMomentoAnt = 0;
+                //CosteMejorMomentoAnt = 0;
 
                 // Borramos la matriz de frecuencias
                 for (int i = 0; i < tam; i++)
@@ -418,9 +466,9 @@ public class TabuSearch {
             System.out.println();
             System.out.println("estancamiento: " + estancaCont);
             System.out.println("Paso = " + iter);
-            System.out.println("Coste Actual: " + CosteActual);
-            System.out.println("Coste MejorPeor: " + CosteMejorPeor);
-            System.out.println("Coste Mejor Global: " + CGlobal);
+            System.out.println("Coste Actual: " + CosteActual + SolActual);
+            System.out.println("Coste MejorPeor: " + CosteMejorPeor + mejorPeores);
+            System.out.println("Coste Mejor Global: " + CGlobal + SolGlobal);
 
             System.out.println("dlb actual: " + Arrays.toString(dlb));
 //            for (int i = 0; i < memFrec.length; i++) {
