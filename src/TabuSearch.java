@@ -12,14 +12,14 @@ public class TabuSearch {
     private final Problem problem;
     private final int iterations;
     private int Tabuprob;
-    private int Tenenciatabu;
-    private double porcentaje;
+    private int tabuTenure;
+    private double percent;
 
 
-    public int Cost(int[][] flow, int[][] loc, int[] sol,int tam) {
+    public int Cost(int[][] flow, int[][] loc, int[] sol,int size) {
         int cost = 0;
-        for (int i = 0; i < tam; i++) {
-            for (int j = 0; j < tam; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 if (i != j) {
                     cost += flow[i][j] * loc[sol[i]][sol[j]];
                 }
@@ -27,13 +27,13 @@ public class TabuSearch {
         }
         return cost;
     }
-    public TabuSearch(Problem problem, int iterations, long seed, int Tabuprob, Logger log, int tenenciaTabu,double porcentaje) {
+    public TabuSearch(Problem problem, int iterations, long seed, int Tabuprob, Logger log, int tabuTenure,double percent) {
         this.problem = problem;
         this.iterations = iterations;
         this.Tabuprob = Tabuprob;
-        this.Tenenciatabu = tenenciaTabu;
+        this.tabuTenure = tabuTenure;
         this.log = log;
-        this.porcentaje = porcentaje;
+        this.percent = percent;
         rand = new Random(seed);
         actualSolution = getInitialSolution(problem);
     }
@@ -43,59 +43,58 @@ public class TabuSearch {
         return greedy.SoluGreedy(problem.getFlowMatrix(), problem.getDistMatrix());
     }
 
-    void masVisitados(int[][] mat, Solution provnuevaSol) {
+    void mostVisited(int[][] mat, Solution provnuevaSol) {
         int[] nuevaSol = provnuevaSol.getSolutionList();
-        int tam = nuevaSol.length;
-        int mayor = Integer.MIN_VALUE;
-        int pfuni = 0;
-        int pcloc = 0;
-        boolean[] marcafuni = new boolean[tam];
-        boolean[] marcacloc = new boolean[tam];
-        for (int k = 0; k < tam; k++) {
-            for (int i = 0; i < tam; i++) {
-                if (!marcafuni[i]) {
-                    for (int j = 0; j < tam; j++) {
-                        if (!marcacloc[j] && mat[i][j] >= mayor) {
-                            mayor = mat[i][j];
-                            pfuni = i;
-                            pcloc = j;
+        int size = nuevaSol.length;
+        int major = Integer.MIN_VALUE;
+        int rowunit = 0;
+        int columloc = 0;
+        boolean[] markrowuni = new boolean[size];
+        boolean[] markcolumloc = new boolean[size];
+        for (int k = 0; k < size; k++) {
+            for (int i = 0; i < size; i++) {
+                if (!markrowuni[i]) {
+                    for (int j = 0; j < size; j++) {
+                        if (!markcolumloc[j] && mat[i][j] >= major) {
+                            major = mat[i][j];
+                            rowunit = i;
+                            columloc = j;
                         }
                     }
                 }
             }
-            nuevaSol[pfuni] = pcloc;
-            marcafuni[pfuni] = true;
-            marcacloc[pcloc] = true;
-            mayor = Integer.MIN_VALUE;
+            nuevaSol[rowunit] = columloc;
+            markrowuni[rowunit] = true;
+            markcolumloc[columloc] = true;
+            major = Integer.MIN_VALUE;
         }
-
     }
 
-    void menosVisitados(int[][] memfrec, Solution provnuevaSol) {
-        int tam = provnuevaSol.getSolutionList().length;
-        int[] nuevaSol = provnuevaSol.getSolutionList();
-        int menor = Integer.MAX_VALUE;
-        int pfuni = 0;
-        int pcloc = 0;
-        boolean[] marcafuni = new boolean[tam];
-        boolean[] marcacloc = new boolean[tam];
+    void lessVisited(int[][] memfrec, Solution provNewSol) {
+        int size = provNewSol.getSolutionList().length;
+        int[] newSol = provNewSol.getSolutionList();
+        int minor = Integer.MAX_VALUE;
+        int rowunit = 0;
+        int columloc = 0;
+        boolean[] markrowunit = new boolean[size];
+        boolean[] markcolumloc = new boolean[size];
 
-        for (int k = 0; k < tam; k++) {
-            for (int i = 0; i < tam; i++) {
-                if (!marcafuni[i]) {
-                    for (int j = 0; j < tam; j++) {
-                        if (!marcacloc[j] && memfrec[i][j] <= menor) {
-                            menor = memfrec[i][j];
-                            pfuni = i;
-                            pcloc = j;
+        for (int k = 0; k < size; k++) {
+            for (int i = 0; i < size; i++) {
+                if (!markrowunit[i]) {
+                    for (int j = 0; j < size; j++) {
+                        if (!markcolumloc[j] && memfrec[i][j] <= minor) {
+                            minor = memfrec[i][j];
+                            rowunit = i;
+                            columloc = j;
                         }
                     }
                 }
             }
-            nuevaSol[pfuni] = pcloc;
-            marcafuni[pfuni] = true;
-            marcacloc[pcloc] = true;
-            menor = Integer.MAX_VALUE;
+            newSol[rowunit] = columloc;
+            markrowunit[rowunit] = true;
+            markcolumloc[columloc] = true;
+            minor = Integer.MAX_VALUE;
         }
     }
 
@@ -174,13 +173,13 @@ public class TabuSearch {
         return lTabu;
     }
 
-    public void dlbPorcent(int[] dlb, int tam, double porcentaje) {
+    public void dlbPercent(int[] dlb, int tam, double percent) {
         double random;
-        int contador = 0;
-        double cantidad = tam * porcentaje;
+        int countzero = 0;
+        double cantidad = tam * percent;
         for (int i = 0; i < tam; i++) {
-            if (contador <= cantidad) {
-                contador++;
+            if (countzero <= cantidad) {
+                countzero++;
                 random = rand.nextDouble();
                 if (random < 0.5) {
                     dlb[i] = 0;
@@ -200,135 +199,129 @@ public class TabuSearch {
         }
     }
 
-    int TabuSearch(int[][] flu, int[][] loc,
-                   int tam, int evaluaciones, int tenenciaTabu, int estancamientosMax,
-                   Solution SolActual) {
+    int TabuSearch(int[][] flow, int[][] loc,
+                   int size, int evaluations, int tabuTenure, int blockMax,
+                   Solution ActualSolution) {
 
-        int estancaCont;
-        //Calculamos el coste de la Solucion inicial
-        int CosteActual = SolActual.getCost();
+        int blockCount;
+        //coste de la Solucion inicial (Greedy)
+        int actualCost = ActualSolution.getCost();
 
         //costes de soluciones de apoyo
-        int CosteMejorPeor = Integer.MAX_VALUE, CGlobal = Integer.MAX_VALUE, CosteMejorMomento = Integer.MAX_VALUE;
-        int CosteMejorMomentoAnt = 0;
+        int costBestworst = Integer.MAX_VALUE, globalCost = Integer.MAX_VALUE, bestMomentCost = Integer.MAX_VALUE;
+        int prevBestCost = 0;
 
-        //calculo de veces q mejora o no la reinicializacion
-        int OEMejoraInte = 0, OEnoMejoraInte = 0, OEMejoraDive = 0, OEnoMejoraDive = 0, osc = 0;
-        Solution posmejorPeores = new Solution(tam);
-        Solution aux2 = new Solution(tam);
+        Solution auxBestWorst = new Solution(size);
+        Solution aux2 = new Solution(size);
         //memorias a corto y largo plazo
 
         //memoria de frecuencias
-        int[][] memFrec = new int[tam][tam];
+        int[][] memFrec = new int[size][size];
 
-        for (int i = 0; i < tam; i++)
-            for (int j = 0; j < tam; j++)
+        for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
                 memFrec[i][j] = 0;
 
         //lista tabu explicita (solución entera)
-        ArrayList<Solution> lTabu = new ArrayList<>();
+        ArrayList<Solution> tabuList = new ArrayList<>();
 
         //metemos la solucion inicial en tabu
-        lTabu.add(SolActual);
+        tabuList.add(ActualSolution);
         //lista tabu implicita (movimientos)
-        int[][] lTabu2 = new int[tam][tam];
+        int[][] tabuList2 = new int[size][size];
 
         //dlb y vectores de apoyo
-        int[] dlb = new int[tam];
+        int[] dlb = new int[size];
 
-        Solution mejorPeores = new Solution(tam);
-        Solution SolGlobal = new Solution(tam);
-        Solution nuevaSol = new Solution(tam);
+        Solution bestWorst = new Solution(size);
+        Solution globalSol = new Solution(size);
+        Solution newSol = new Solution(size);
 
         //inicializo la dlb
-        dlbPorcent(dlb,tam,porcentaje);
+        dlbPercent(dlb,size, percent);
 
         int iter = 0;
 
-        estancaCont = 0;
-        boolean mejora;
-        int pos = rand.nextInt(0, tam - 1);//random para darle dinamismo inicialmente //PARA ANOTAR LA ULTIMA POSICIÓN DE INTERCAMBIO ANTERIOR
+        blockCount = 0;
+        boolean improvement;
+        int pos = rand.nextInt(0, size - 1);//primera posicion aleatoria
 
-        //CosteMejorPeor = Integer.MAX_VALUE;
-        while (iter < evaluaciones) {
+        while (iter < evaluations) {
             iter++;
 
-            mejora = false;
+            improvement = false;
 
-            //tipo=pos;     //SI NO HAY CARGA ALEATORIA ESTA OPCION DA EL MISMO RESULTADO AUN CAMBIANDO SEMILLA
-            //tipo = rand.nextInt(0, tam - 1);   //PRIMERA UNIDAD DE INTERCAMBIO ALEATORIA
-
-            CosteMejorPeor = Integer.MAX_VALUE;  //cada iteracion
-            int filuni = 0, colpos = 0;
+            costBestworst = Integer.MAX_VALUE;  //cada iteracion
+            int rowuni = 0, colpos = 0;
             //comenzar por el principio y llegar hasta el punto de partida
-            for (int i = pos, cont = 0; cont < tam && !mejora; i++, cont++) {
-                if (i == tam) i = 0;  //para que cicle
+            for (int i = pos, cont = 0; cont < size && !improvement; i++, cont++) {
+                if (i == size) i = 0;  //para que cicle
                 if (dlb[i] == 0) {
                     boolean improve_flag = false;
 
-                    for (int j = i + 1, cont1 = 0; cont1 < tam && !mejora; j++, cont1++) {
+                    for (int j = i + 1, count1 = 0; count1 < size && !improvement; j++, count1++) {
                         //checkMove(i,j)
-                        if (j == tam) j = 0;  //para que cicle
+                        if (j == size) j = 0;  //para que cicle
 
                         //vemos si es Tabu con la primera Lista Tabu
                         boolean tabu = false;
-                        Solution newSol = new Solution(SolActual);
+                        Solution newSol = new Solution(ActualSolution);
                         newSol = swapSolution(newSol,i,j);
                         //boolean iguales = Arrays.equals(SolActual.getSolutionList(), newSol.getSolutionList());
                         //System.out.println("iguales: " + iguales);
-                        for (int l = 0; l < lTabu.size(); l++) {
-                            if (lTabu.get(l).getSolutionList() == newSol.getSolutionList()) {
+                        for (int l = 0; l < tabuList.size(); l++) {
+                            if (tabuList.get(l).getSolutionList() == newSol.getSolutionList()) {
                                 tabu = true;  //esta en lista tabu
                                 System.out.println("es tabu: " + tabu);
                                 break;
                             }
                         }
                         if (!tabu) {
-                            //vemos si es Tabu con la segunda Lista Tabu
-                            filuni = i;
+
+                            rowuni = i;
                             colpos = j;
-                            //System.out.println("no Tabu ");
-                            if (filuni > colpos){
-                                int temp= filuni;
-                                filuni= colpos;
+                            //trabajamos solo con la triangular superior
+                            if (rowuni > colpos){
+                                int temp= rowuni;
+                                rowuni= colpos;
                                 colpos = temp;
                             }
 
-                                 //swap (filuni, colpos); //Para trabajar con la triangular superior
 
-                            if (lTabu2[filuni][colpos] > 0)
+
+                            if (tabuList2[rowuni][colpos] > 0)
                                 tabu = true;
                         }
 
                         //si no es Tabu
                         if (!tabu) {
                             //funcion de factorizacion para ver si mejora o no si lo intercambiaramos
-                            int C = Factorization2Opt(flu, loc, tam, SolActual, CosteActual, i, j);
-                            if (C < CosteActual) {
+                            int cost = Factorization2Opt(flow, loc, size, ActualSolution, actualCost, i, j);
+                            if (cost < actualCost) {
                                 //iter++; //YA esta PUESTO ARRIBA
-                                CosteActual = C;
+                                actualCost = cost;
 
                                 //System.out.println("solActual antes:" + SolActual);
-                                SolActual = swapSolution(SolActual, i, j);
+                                ActualSolution = swapSolution(ActualSolution, i, j);
 
-                                SolActual.setCost(Cost(flu,loc,SolActual.getSolutionList(),tam));
+                                ActualSolution.setCost(Cost(flow,loc,ActualSolution.getSolutionList(),size));
                                 //System.out.println("solActual despu:" + SolActual);
-                                filuni = i;
+                                rowuni = i;
                                 colpos = j;  //me quedo el par de intercambio
 
                                 dlb[i] = dlb[j] = 0;
                                 pos = j;    //ULTIMA UNIDAD DE INTERCAMBIO
                                 improve_flag = true;
-                                mejora = true;
+                                improvement = true;
                             } else {
-                                if (C < CosteMejorPeor) {  //ojo como actualiza
+                                if (cost < costBestworst) {  //ojo como actualiza
                                     //System.out.println("actualiza mejor peor");
-                                    CosteMejorPeor = C;
-                                    posmejorPeores.setSolutionList(SolActual.getSolutionList());
-                                    posmejorPeores.setCost(CosteMejorPeor);
-                                    mejorPeores = swapSolution(posmejorPeores, i, j);
-                                    mejorPeores.setCost(Cost(flu,loc, mejorPeores.getSolutionList(), tam));
-                                    filuni = i;
+                                    costBestworst = cost;
+                                    auxBestWorst.setSolutionList(ActualSolution.getSolutionList());
+                                    auxBestWorst.setCost(costBestworst);
+                                    bestWorst = swapSolution(auxBestWorst, i, j);
+                                    bestWorst.setCost(Cost(flow,loc, bestWorst.getSolutionList(), size));
+                                    rowuni = i;
                                     colpos = j; //me quedo el par de intercambio
                                 }
                             }
@@ -339,146 +332,118 @@ public class TabuSearch {
                     }
                 }
             }
-            //UNA VEZ VISITO TODO EL VECINDARIO O HAY MEJORA
+            //UNA VEZ VISITO  EL VECINDARIO O HAY MEJORA
             //TENEMOS UN MOVIMIENTO Y ACTUALIZAMOS MEMORIAS
 
-            if (mejora) {
+            if (improvement) {
                 //ACTUALIZO la memoria de frecuencias
-                for (int k = 0; k < tam; k++) {
-                    memFrec[k][SolActual.getSolutionList()[k]]++;
+                for (int k = 0; k < size; k++) {
+                    memFrec[k][ActualSolution.getSolutionList()[k]]++;
                 }
-                lTabu.add(SolActual);
-
+                tabuList.add(ActualSolution);
             } else {
                 //ACTUALIZO la memoria de frecuencias
-                for (int k = 0; k < tam; k++) {
-                    memFrec[k][mejorPeores.getSolutionList()[k]]++;
+                for (int k = 0; k < size; k++) {
+                    memFrec[k][bestWorst.getSolutionList()[k]]++;
                 }
-                lTabu.add(mejorPeores);
+                tabuList.add(bestWorst);
             }
 
             //ACTUALIZO tabu2 con pares de intercambio
             //solo recorro la triangular superior para ir más rápido
-            for (int k = 0; k < tam - 1; k++) {
-                for (int l = k + 1; l < tam; l++) {
-                    if (lTabu2[k][l] > 0)
-                        lTabu2[k][l]--;
+            for (int k = 0; k < size - 1; k++) {
+                for (int l = k + 1; l < size; l++) {
+                    if (tabuList2[k][l] > 0)
+                        tabuList2[k][l]--;
                 }
             }
 
-            if (filuni > colpos) {
-                int temp = filuni;
-                filuni= colpos;
+
+            if (rowuni > colpos) {
+                int temp = rowuni;
+                rowuni= colpos;
                 colpos = temp;
             }
-                //swap(filuni, colpos);
-            lTabu2[filuni][colpos] = tenenciaTabu;
 
-            if (!mejora) {
-                estancaCont++;
+            tabuList2[rowuni][colpos] = tabuTenure;
 
-                if (CosteMejorPeor != Integer.MAX_VALUE) { //evita posibles dlb nuevas con todo 1's
-                    CosteActual = CosteMejorPeor;
-                    SolActual = mejorPeores;
+            if (!improvement) {
+                blockCount++;
+
+                if (costBestworst != Integer.MAX_VALUE) { //evita dlb completa de 1s
+                    actualCost = costBestworst;
+                    ActualSolution = bestWorst;
                 }
                 //CosteMejorPeor++;
-                //Para los del viernes
-                dlbPorcent(dlb, tam,porcentaje);
+                //Reinicializamos la dlb con un porcentaje de 0s pasado por fichero
+                dlbPercent(dlb, size, percent);
 
             } else {
 
-                if (CosteMejorMomentoAnt > CosteActual) {  //Asi es la ultima forma que ha dicho
-                    estancaCont = 0;
-                    CosteMejorMomentoAnt = CosteActual;
+                if (prevBestCost > actualCost) {
+                    blockCount = 0;
+                    prevBestCost = actualCost;
                 } else
-                    estancaCont++;
+                    blockCount++;
 
-                if (CosteActual < CGlobal) {
-                    CGlobal = CosteActual;
-                    SolGlobal = SolActual;
+                if (actualCost < globalCost) {
+                    globalCost = actualCost;
+                    globalSol = ActualSolution;
                 }
             }
 
-            if (estancaCont == estancamientosMax) {
-                System.out.println("** Reinicializo");
-                if (osc == 0) {
-                    if (CosteMejorMomento > CosteActual) {
-                        CosteMejorMomento = CosteActual;
-                        OEMejoraDive++;
+            if (blockCount == blockMax) {
+                System.out.println("** Reboot");
 
-                    } else {
-                        OEnoMejoraDive++;
-                    }
-                } else {
-                    if (CosteMejorMomento > CosteActual) {
-                        CosteMejorMomento = CosteActual;
-                        OEMejoraInte++;
-
-                    } else {
-                        OEnoMejoraInte++;
-                    }
-                }
-
-                estancaCont = 0;
+                blockCount = 0;
                 int prob = rand.nextInt(1, 100);
-                //mostrarmatriz(memFrec);
 
                 if (prob <= Tabuprob) {
                     osc = 0;
-                    menosVisitados(memFrec, nuevaSol);
+                    lessVisited(memFrec, newSol);
                 } else {
                     osc = 1;
-                    masVisitados(memFrec, nuevaSol);
+                    mostVisited(memFrec, newSol);
                 }
-                System.out.println("act solucion: " + SolActual + SolActual.getSolutionList().length);
-                SolActual.setSolutionList(nuevaSol.getSolutionList());
-                SolActual.setCost(Cost(flu, loc, SolActual.getSolutionList(), tam));
-                CosteActual = SolActual.getCost();
-                System.out.println("nue solucion: " + SolActual + SolActual.getSolutionList().length);
-                CosteMejorMomentoAnt = 0;
-                if (CosteActual < CGlobal) {
-                    CGlobal = CosteActual;
-                    SolGlobal = SolActual;
-                }
+                prevBestCost = Integer.MIN_VALUE;
+                System.out.println("actual solution: " + ActualSolution + ActualSolution.getSolutionList().length);
+                ActualSolution.setSolutionList(newSol.getSolutionList());
+                ActualSolution.setCost(Cost(flow, loc, ActualSolution.getSolutionList(), size));
+                actualCost = ActualSolution.getCost();
+                System.out.println("new solution: " + ActualSolution + ActualSolution.getSolutionList().length);
 
-                //iniciamos esta variable para los empeoramientos
-                //CosteMejorMomentoAnt = 0;
+                if (actualCost < globalCost) {
+                    globalCost = actualCost;
+                    globalSol = ActualSolution;
+                }
 
                 // Borramos la matriz de frecuencias
-                for (int i = 0; i < tam; i++)
-                    for (int j = 0; j < tam; j++)
+                for (int i = 0; i < size; i++)
+                    for (int j = 0; j < size; j++)
                         memFrec[i][j] = 0;
 
                 // Borramos la lista tabu
 
 
-                for (int i = 0; i < tam - 1; i++)
-                    for (int j = i + 1; j < tam; j++)
-                        lTabu2[i][j] = 0;
+                for (int i = 0; i < size - 1; i++)
+                    for (int j = i + 1; j < size; j++)
+                        tabuList2[i][j] = 0;
 
                 //reinicializamos la dlb
-
-
-                dlbPorcent(dlb,tam,porcentaje);
+                dlbPercent(dlb,size, percent);
             }
 
             System.out.println();
-            System.out.println("estancamiento: " + estancaCont);
-            System.out.println("Paso = " + iter);
-            System.out.println("Coste Actual: " + CosteActual + SolActual);
-            System.out.println("Coste MejorPeor: " + CosteMejorPeor + mejorPeores);
-            System.out.println("Coste Mejor Global: " + CGlobal + SolGlobal);
+            System.out.println("blockage: " + blockCount);
+            System.out.println("Iteration: " + iter);
+            System.out.println("actual cost: " + actualCost + "actual solution: " + ActualSolution);
+            System.out.println("Cost Best Worst: " + costBestworst + "Best Worst: " + bestWorst);
+            System.out.println("Best Global Cost: " + globalCost+ "Global Solution: " + globalSol);
 
             System.out.println("dlb actual: " + Arrays.toString(dlb));
-//            for (int i = 0; i < memFrec.length; i++) {
-//                System.out.println(Arrays.toString(memFrec[i]));
-//            }
         }
 
-        System.out.println("MEJORAS-Dive: " + OEMejoraDive + " NO MEJORAS-Dive: " + OEnoMejoraDive);
-        System.out.println("MEJORAS-Inte: " + OEMejoraInte + " NO MEJORAS-Inte: " + OEnoMejoraInte);
-
-        SolActual = SolGlobal;
-        return CGlobal;
+        ActualSolution = globalSol;
+        return globalCost;
     }
 }
