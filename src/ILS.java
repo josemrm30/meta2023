@@ -1,16 +1,14 @@
-import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.ArrayList;
 
 
-public class Multiarranque {
+public class ILS {
     private final int[] distances;
     private final int[] flows;
     private int size;
-
+    private double porcentaje;
+    private double porcentajeIls;
     private TabuSearch tabu;
     private Solution actualSolution;
     private Random rand;
@@ -18,12 +16,15 @@ public class Multiarranque {
     private Problem problem;
 
 
-    public Multiarranque(int size, Problem problem, int iterations, int seed, int Tabuprob, Logger log, int tenenciaTabu) {
+    public ILS(int size, Problem problem, int iterations, long seed, int Tabuprob, Logger log, int tenenciaTabu, double porcentaje,double porcentajeIls) {
         this.size = size;
         distances = new int[size];
         flows = new int[size];
-        tabu = new TabuSearch(problem, iterations, seed, Tabuprob, log, tenenciaTabu);
-
+        rand = new Random(seed);
+        this.porcentajeIls = porcentajeIls;
+        System.out.println("porcentajeIls: " + porcentajeIls);
+        System.out.println("porcentaje: para tabu " + porcentaje);
+        tabu = new TabuSearch(problem, iterations, seed, Tabuprob, log, tenenciaTabu,porcentaje);
     }
 
     public int[] swapSolution(int[] actualSolution, int i, int j) {
@@ -64,14 +65,17 @@ public class Multiarranque {
                 mejorCoste = coste;
             }
             //swap list
-            int p1 = rand.nextInt(0, tam);
-            int p2 = rand.nextInt(0, tam);
+            int p1 = rand.nextInt(0, tam - 1);
+            int p2 = rand.nextInt(0, tam - 1);
+
+            System.out.println("p1: " + p1 + "p2: " + p2);
             if(p1 > p2){
                 int temp = p1;
                 p1 = p2;
                 p2 = temp;
             }
-            if ((p1 - p2) > tam/4) {
+            System.out.println("porcentajeIls2: " + porcentajeIls);
+            if ((p1 - p2) > tam * porcentajeIls) {
                 swapSolution(SolActual, p1, p2);
                 for (int k = p1, j = p2; k < j; k++, j--) {
                     swapSolution(SolActual, k, j);
@@ -79,5 +83,4 @@ public class Multiarranque {
             }
         }
     }
-
 }

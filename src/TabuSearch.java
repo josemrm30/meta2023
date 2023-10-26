@@ -1,19 +1,19 @@
-import java.sql.Array;
-import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 
 public class TabuSearch {
     private Solution actualSolution;
+
+    private Solution finalSolution;
     private Random rand;
     private Logger log;
     private final Problem problem;
     private final int iterations;
     private int Tabuprob;
     private int Tenenciatabu;
+    private double porcentaje;
 
 
     public int Cost(int[][] flow, int[][] loc, int[] sol,int tam) {
@@ -27,12 +27,13 @@ public class TabuSearch {
         }
         return cost;
     }
-    public TabuSearch(Problem problem, int iterations, long seed, int Tabuprob, Logger log, int tenenciaTabu) {
+    public TabuSearch(Problem problem, int iterations, long seed, int Tabuprob, Logger log, int tenenciaTabu,double porcentaje) {
         this.problem = problem;
         this.iterations = iterations;
         this.Tabuprob = Tabuprob;
         this.Tenenciatabu = tenenciaTabu;
         this.log = log;
+        this.porcentaje = porcentaje;
         rand = new Random(seed);
         actualSolution = getInitialSolution(problem);
     }
@@ -67,6 +68,7 @@ public class TabuSearch {
             marcacloc[pcloc] = true;
             mayor = Integer.MIN_VALUE;
         }
+
     }
 
     void menosVisitados(int[][] memfrec, Solution provnuevaSol) {
@@ -160,14 +162,10 @@ public class TabuSearch {
     }
 
     public void swap(int fila,int columna){
-
         int temp = fila;
         fila = columna;
         columna = temp;
-
     }
-
-
 
     public int[][] swap(int[][] lTabu, int fil, int col) {
         int temp = lTabu[fil][col];
@@ -176,10 +174,10 @@ public class TabuSearch {
         return lTabu;
     }
 
-    public void dlb25(int[] dlb, int tam) {
+    public void dlbPorcent(int[] dlb, int tam, double porcentaje) {
         double random;
         int contador = 0;
-        int cantidad = tam / 4;
+        double cantidad = tam * porcentaje;
         for (int i = 0; i < tam; i++) {
             if (contador <= cantidad) {
                 contador++;
@@ -242,16 +240,14 @@ public class TabuSearch {
         Solution SolGlobal = new Solution(tam);
         Solution nuevaSol = new Solution(tam);
 
-
         //inicializo la dlb
-        dlb25(dlb,tam);
+        dlbPorcent(dlb,tam,porcentaje);
 
         int iter = 0;
 
         estancaCont = 0;
         boolean mejora;
         int pos = rand.nextInt(0, tam - 1);//random para darle dinamismo inicialmente //PARA ANOTAR LA ULTIMA POSICIÓN DE INTERCAMBIO ANTERIOR
-
 
         //CosteMejorPeor = Integer.MAX_VALUE;
         while (iter < evaluaciones) {
@@ -311,9 +307,11 @@ public class TabuSearch {
                             if (C < CosteActual) {
                                 //iter++; //YA esta PUESTO ARRIBA
                                 CosteActual = C;
+
                                 //System.out.println("solActual antes:" + SolActual);
                                 SolActual = swapSolution(SolActual, i, j);
-                                SolActual.setCost(C);
+
+                                SolActual.setCost(Cost(flu,loc,SolActual.getSolutionList(),tam));
                                 //System.out.println("solActual despu:" + SolActual);
                                 filuni = i;
                                 colpos = j;  //me quedo el par de intercambio
@@ -329,6 +327,7 @@ public class TabuSearch {
                                     posmejorPeores.setSolutionList(SolActual.getSolutionList());
                                     posmejorPeores.setCost(CosteMejorPeor);
                                     mejorPeores = swapSolution(posmejorPeores, i, j);
+                                    mejorPeores.setCost(Cost(flu,loc, mejorPeores.getSolutionList(), tam));
                                     filuni = i;
                                     colpos = j; //me quedo el par de intercambio
                                 }
@@ -384,7 +383,7 @@ public class TabuSearch {
                 }
                 //CosteMejorPeor++;
                 //Para los del viernes
-                dlb25(dlb, tam);
+                dlbPorcent(dlb, tam,porcentaje);
 
             } else {
 
@@ -460,7 +459,7 @@ public class TabuSearch {
                 //reinicializamos la dlb
 
 
-                dlb25(dlb,tam);
+                dlbPorcent(dlb,tam,porcentaje);
             }
 
             System.out.println();
