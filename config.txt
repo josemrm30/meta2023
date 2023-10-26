@@ -8,3 +8,4 @@ TenenciaTabu=7
 Estancamientos=50
 Porcentaje=0.25
 PorcentajeIls=0.50
+IteracionesIls=1000

@@ -14,10 +14,11 @@ public class Metaheuristic implements Runnable {
     private double porcentaje;
 
     private double porcentajeIls;
+    private int iteracionesIls;
     private final Long seed;
     private final String alg;
 
-    public Metaheuristic(Problem problem, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog, int iterations,int tabuProb,int tenenciaTabu, int estancamientos, double porcentaje,double porcentajeIls, String alg) throws IOException {
+    public Metaheuristic(Problem problem, CountDownLatch cdl, Long seed, String logFile, boolean consoleLog, int iterations,int tabuProb,int tenenciaTabu, int estancamientos, double porcentaje,double porcentajeIls,int iteracionesIls, String alg) throws IOException {
         this.problem = problem;
         this.cdl = cdl;
         this.iterations = iterations;
@@ -26,6 +27,7 @@ public class Metaheuristic implements Runnable {
         this.estancamientos=estancamientos;
         this.porcentaje = porcentaje;
         this.porcentajeIls = porcentajeIls;
+        this.iteracionesIls = iteracionesIls;
         this.seed = seed;
         this.alg = alg;
         log = Logger.getLogger(Metaheuristic.class.getName() + " " + logFile);
@@ -60,7 +62,7 @@ public class Metaheuristic implements Runnable {
                 TabuSearch tabuSearch2 = new TabuSearch(problem, iterations, seed,TabuProb ,log,tenenciaTabu,porcentaje);
                 cost = tabuSearch2.TabuSearch(problem.getFlowMatrix(),problem.getDistMatrix(),problem.getMatrixSize(),
                         iterations,tenenciaTabu,estancamientos,tabuSearch2.getInitialSolution(problem));
-                ILS ils = new ILS(problem.getMatrixSize(), problem, iterations,seed,TabuProb, log,tenenciaTabu, porcentaje,porcentajeIls);
+                ILS ils = new ILS(problem.getMatrixSize(), problem, iterations,seed,TabuProb, log,tenenciaTabu, porcentaje,porcentajeIls, iteracionesIls);
                 ils.Ils(problem.getFlowMatrix(),problem.getDistMatrix(),problem.getMatrixSize(),
                         iterations,tenenciaTabu,estancamientos,tabuSearch2.getInitialSolution(problem));
                 break;

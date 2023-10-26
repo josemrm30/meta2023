@@ -15,8 +15,8 @@ public class Configurator {
     private int tenenciaTabu;
     private int estancamientos;
     private double porcentaje;
-
     private double porcentajeIls;
+    private int iteracionesIls;
     Boolean consoleLog;
 
     public Configurator(String path) throws IOException {
@@ -69,8 +69,9 @@ public class Configurator {
                 case "PorcentajeIls":
                     porcentajeIls = Double.parseDouble(splited[1]);
                     break;
-
-
+                case "IteracionesIls":
+                    iteracionesIls = Integer.parseInt(splited[1]);
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + splited[0]);
             }
@@ -102,6 +103,8 @@ public class Configurator {
     public double getPorcentaje(){return porcentaje;}
 
     public double getPorcentajeIls(){return porcentajeIls;}
+
+    public int getIteracionesIls(){return iteracionesIls;}
 }
 
 
