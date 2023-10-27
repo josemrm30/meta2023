@@ -17,6 +17,7 @@ public class Configurator {
     private double percent;
     private double percentIls;
     private int iterationsIls;
+    private double probabilitySet;
     Boolean consoleLog;
 
     public Configurator(String path) throws IOException {
@@ -72,6 +73,9 @@ public class Configurator {
                 case "IterationsIls":
                     iterationsIls = Integer.parseInt(splited[1]);
                     break;
+                case "ProbabilitySet":
+                    probabilitySet = Double.parseDouble(splited[1]);
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + splited[0]);
             }
@@ -105,6 +109,8 @@ public class Configurator {
     public double getPercentIls(){return percentIls;}
 
     public int getIterationsIls(){return iterationsIls;}
+
+    public double getProbabilitySet(){return probabilitySet;}
 }
 
 

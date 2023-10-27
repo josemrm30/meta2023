@@ -28,7 +28,7 @@ public class Main {
                     String logFile = "log/" + config.getAlgorithms().get(i) + "_" + problem.getName() + "_" + config.getSeeds().get(k) + ".txt";
                     Metaheuristic meta = new Metaheuristic(problem, cdl, config.getSeeds().get(k), logFile, config.consoleLog,
                             config.getIterations(),config.getTabuprob(),config.getTabuTenure(),config.getBlockage(),config.getPercent(),
-                            config.getPercentIls(),config.getIterationsIls(),config.getAlgorithms().get(i));
+                            config.getPercentIls(),config.getIterationsIls(), config.getProbabilitySet(), config.getAlgorithms().get(i));
                     //executor.execute(meta);
                     meta.run();
                 }

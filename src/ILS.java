@@ -15,7 +15,7 @@ public class ILS {
     private Problem problem;
 
 
-    public ILS(int size, Problem problem, int iterations, long seed, int Tabuprob, Logger log, int tabuTenure, double percent, double percentIls, int iterationsIls) {
+    public ILS(int size, Problem problem, int iterations, long seed, int Tabuprob, Logger log, int tabuTenure, double percent, double percentIls, int iterationsIls,double probabilitySet) {
         this.size = size;
         distances = new int[size];
         flows = new int[size];
@@ -24,7 +24,7 @@ public class ILS {
         this.iterationsIls = iterationsIls;
         System.out.println("percentIls: " + percentIls);
         System.out.println("percent: for tabu " + percent);
-        tabu = new TabuSearch(problem, iterations, seed, Tabuprob, log, tabuTenure,percent);
+        tabu = new TabuSearch(problem, iterations, seed, Tabuprob, log, tabuTenure,percent,probabilitySet);
     }
 
     public int[] swapSolution(int[] actualSolution, int i, int j) {

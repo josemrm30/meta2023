@@ -12,6 +12,7 @@ public class TabuSearch {
     private final Problem problem;
     private final int iterations;
     private int Tabuprob;
+    private double probabilitySet;
     private int tabuTenure;
     private double percent;
 
@@ -27,11 +28,12 @@ public class TabuSearch {
         }
         return cost;
     }
-    public TabuSearch(Problem problem, int iterations, long seed, int Tabuprob, Logger log, int tabuTenure,double percent) {
+    public TabuSearch(Problem problem, int iterations, long seed, int Tabuprob, Logger log, int tabuTenure,double percent,double probabilitySet) {
         this.problem = problem;
         this.iterations = iterations;
         this.Tabuprob = Tabuprob;
         this.tabuTenure = tabuTenure;
+        this.probabilitySet = probabilitySet;
         this.log = log;
         this.percent = percent;
         rand = new Random(seed);
@@ -181,7 +183,7 @@ public class TabuSearch {
             if (countzero <= cantidad) {
                 countzero++;
                 random = rand.nextDouble();
-                if (random < 0.5) {
+                if (random < probabilitySet) {
                     dlb[i] = 0;
                 } else {
                     dlb[i] = 1;

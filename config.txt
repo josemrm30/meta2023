@@ -1,11 +1,12 @@
 Files=ford01.dat
 Seeds=25265192
-Algorithms=Ils
+Algorithms=TabuSearch
 ConsoleLog=False
 Iterations=100
 TabuProb=50
 TabuTenure=7
 Blockage=50
+ProbabilitySet=0.5
 Percent=0.25
 PercentIls=0.50
 IterationsIls=30
