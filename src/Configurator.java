@@ -12,11 +12,11 @@ public class Configurator {
     ArrayList<String> solutions;
     private int iterations;
     private int tabuProb;
-    private int tenenciaTabu;
-    private int estancamientos;
-    private double porcentaje;
-    private double porcentajeIls;
-    private int iteracionesIls;
+    private int tabuTenure;
+    private int Blockage;
+    private double percent;
+    private double percentIls;
+    private int iterationsIls;
     Boolean consoleLog;
 
     public Configurator(String path) throws IOException {
@@ -58,19 +58,19 @@ public class Configurator {
                     tabuProb = Integer.parseInt(splited[1]);
                     break;
                 case "TabuTenure":
-                    tenenciaTabu = Integer.parseInt(splited[1]);
+                    tabuTenure = Integer.parseInt(splited[1]);
                     break;
                 case "Blockage":
-                    estancamientos = Integer.parseInt(splited[1]);
+                    Blockage = Integer.parseInt(splited[1]);
                     break;
                 case "Percent":
-                    porcentaje = Double.parseDouble(splited[1]);
+                    percent = Double.parseDouble(splited[1]);
                     break;
                 case "PercentIls":
-                    porcentajeIls = Double.parseDouble(splited[1]);
+                    percentIls = Double.parseDouble(splited[1]);
                     break;
                 case "IterationsIls":
-                    iteracionesIls = Integer.parseInt(splited[1]);
+                    iterationsIls = Integer.parseInt(splited[1]);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + splited[0]);
@@ -96,15 +96,15 @@ public class Configurator {
 
     public int getTabuprob(){return tabuProb;}
 
-    public int getTenenciaTabu(){return tenenciaTabu;}
+    public int getTabuTenure(){return tabuTenure;}
 
-    public int getEstancamientos(){return estancamientos;}
+    public int getBlockage(){return Blockage;}
 
-    public double getPorcentaje(){return porcentaje;}
+    public double getPercent(){return percent;}
 
-    public double getPorcentajeIls(){return porcentajeIls;}
+    public double getPercentIls(){return percentIls;}
 
-    public int getIteracionesIls(){return iteracionesIls;}
+    public int getIterationsIls(){return iterationsIls;}
 }
 
 
