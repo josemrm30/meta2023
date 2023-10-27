@@ -57,19 +57,19 @@ public class Configurator {
                 case "TabuProb":
                     tabuProb = Integer.parseInt(splited[1]);
                     break;
-                case "TenenciaTabu":
+                case "TabuTenure":
                     tenenciaTabu = Integer.parseInt(splited[1]);
                     break;
-                case "Estancamientos":
+                case "Blockage":
                     estancamientos = Integer.parseInt(splited[1]);
                     break;
-                case "Porcentaje":
+                case "Percent":
                     porcentaje = Double.parseDouble(splited[1]);
                     break;
-                case "PorcentajeIls":
+                case "PercentIls":
                     porcentajeIls = Double.parseDouble(splited[1]);
                     break;
-                case "IteracionesIls":
+                case "IterationsIls":
                     iteracionesIls = Integer.parseInt(splited[1]);
                     break;
                 default:

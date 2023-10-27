@@ -44,8 +44,8 @@ public class TabuSearch {
     }
 
     void mostVisited(int[][] mat, Solution provnuevaSol) {
-        int[] nuevaSol = provnuevaSol.getSolutionList();
-        int size = nuevaSol.length;
+        int[] newSol = provnuevaSol.getSolutionList();
+        int size = newSol.length;
         int major = Integer.MIN_VALUE;
         int rowunit = 0;
         int columloc = 0;
@@ -63,7 +63,7 @@ public class TabuSearch {
                     }
                 }
             }
-            nuevaSol[rowunit] = columloc;
+            newSol[rowunit] = columloc;
             markrowuni[rowunit] = true;
             markcolumloc[columloc] = true;
             major = Integer.MIN_VALUE;
@@ -260,12 +260,12 @@ public class TabuSearch {
                     boolean improve_flag = false;
 
                     for (int j = i + 1, count1 = 0; count1 < size && !improvement; j++, count1++) {
-                        //checkMove(i,j)
+
                         if (j == size) j = 0;  //para que cicle
 
                         //vemos si es Tabu con la primera Lista Tabu
                         boolean tabu = false;
-                        Solution newSol = new Solution(ActualSolution);
+                        newSol = new Solution(ActualSolution);
                         newSol = swapSolution(newSol,i,j);
                         //boolean iguales = Arrays.equals(SolActual.getSolutionList(), newSol.getSolutionList());
                         //System.out.println("iguales: " + iguales);
@@ -276,6 +276,7 @@ public class TabuSearch {
                                 break;
                             }
                         }
+                        //comprobamos segunda lista tabu
                         if (!tabu) {
 
                             rowuni = i;
@@ -286,9 +287,6 @@ public class TabuSearch {
                                 rowuni= colpos;
                                 colpos = temp;
                             }
-
-
-
                             if (tabuList2[rowuni][colpos] > 0)
                                 tabu = true;
                         }
@@ -298,7 +296,6 @@ public class TabuSearch {
                             //funcion de factorizacion para ver si mejora o no si lo intercambiaramos
                             int cost = Factorization2Opt(flow, loc, size, ActualSolution, actualCost, i, j);
                             if (cost < actualCost) {
-                                //iter++; //YA esta PUESTO ARRIBA
                                 actualCost = cost;
 
                                 //System.out.println("solActual antes:" + SolActual);
@@ -399,13 +396,11 @@ public class TabuSearch {
                 int prob = rand.nextInt(1, 100);
 
                 if (prob <= Tabuprob) {
-                    osc = 0;
                     lessVisited(memFrec, newSol);
                 } else {
-                    osc = 1;
                     mostVisited(memFrec, newSol);
                 }
-                prevBestCost = Integer.MIN_VALUE;
+                prevBestCost = 0;
                 System.out.println("actual solution: " + ActualSolution + ActualSolution.getSolutionList().length);
                 ActualSolution.setSolutionList(newSol.getSolutionList());
                 ActualSolution.setCost(Cost(flow, loc, ActualSolution.getSolutionList(), size));
@@ -440,7 +435,7 @@ public class TabuSearch {
             System.out.println("Cost Best Worst: " + costBestworst + "Best Worst: " + bestWorst);
             System.out.println("Best Global Cost: " + globalCost+ "Global Solution: " + globalSol);
 
-            System.out.println("dlb actual: " + Arrays.toString(dlb));
+            System.out.println("actual dlb: " + Arrays.toString(dlb));
         }
 
         ActualSolution = globalSol;
