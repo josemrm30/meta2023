@@ -3,7 +3,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LocalSearch {
+public class AlgPMDLBit_Clase04_Grupo_06 {
 
     private final Solution actualSolution;
     private final Random rand;
@@ -11,7 +11,7 @@ public class LocalSearch {
     private final Problem problem;
     private final int iterations;
 
-    public LocalSearch(Problem problem, int iterations, Long seed, Logger log) {
+    public AlgPMDLBit_Clase04_Grupo_06(Problem problem, int iterations, Long seed, Logger log) {
         this.problem = problem;
         this.iterations = iterations;
         this.log = log;
@@ -20,7 +20,7 @@ public class LocalSearch {
     }
 
     public Solution getInitialSolution(Problem problem) {
-        Greedy greedy = new Greedy(problem.getMatrixSize());
+        AlgGreedy_Clase04_Grupo_06 greedy = new AlgGreedy_Clase04_Grupo_06(problem.getMatrixSize());
         return greedy.SoluGreedy(problem.getFlowMatrix(), problem.getDistMatrix());
     }
 
@@ -82,13 +82,7 @@ public class LocalSearch {
                                 log.log(Level.INFO, "Rejected swapped solution");
                                 dlb[i] = 1;
                             }
-                            if (j == size - 1) {
-                                j = -1;
-                            }
                         }
-                    }
-                    if (i == size - 1) {
-                        i = -1;
                     }
                 }
             }
@@ -100,10 +94,10 @@ public class LocalSearch {
     private int Factorization2Opt(int[][] flow, int[][] loc, int size, int[] actualSolution, int ActualCost, int r, int s) {
         for (int k = 0; k < size; k++) {
             if (k != r && k != s) {
-                ActualCost += flow[r][k] * (loc[actualSolution[s] - 1][actualSolution[k] - 1] - loc[actualSolution[r] - 1][actualSolution[k] - 1]) +
-                        (flow[s][k] * (loc[actualSolution[r] - 1][actualSolution[k] - 1] - loc[actualSolution[s] - 1][actualSolution[k] - 1])) +
-                        (flow[k][r] * (loc[actualSolution[k] - 1][actualSolution[s] - 1] - loc[actualSolution[k] - 1][actualSolution[r] - 1])) +
-                        (flow[k][s] * (loc[actualSolution[k] - 1][actualSolution[r] - 1] - loc[actualSolution[k] - 1][actualSolution[s] - 1]));
+                ActualCost += flow[r][k] * (loc[actualSolution[s]][actualSolution[k]] - loc[actualSolution[r]][actualSolution[k]]) +
+                        (flow[s][k] * (loc[actualSolution[r]][actualSolution[k]] - loc[actualSolution[s]][actualSolution[k]])) +
+                        (flow[k][r] * (loc[actualSolution[k]][actualSolution[s]] - loc[actualSolution[k]][actualSolution[r]])) +
+                        (flow[k][s] * (loc[actualSolution[k]][actualSolution[r]] - loc[actualSolution[k]][actualSolution[s]]));
             }
         }
         return ActualCost;
