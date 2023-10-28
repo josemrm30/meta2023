@@ -98,19 +98,31 @@ public class Configurator {
         return iterations;
     }
 
-    public int getTabuprob(){return tabuProb;}
+    public int getTabuprob() {
+        return tabuProb;
+    }
 
-    public int getTabuTenure(){return tabuTenure;}
+    public int getTabuTenure() {
+        return tabuTenure;
+    }
 
-    public int getBlockage(){return Blockage;}
+    public int getBlockage() {
+        return Blockage;
+    }
 
-    public double getPercent(){return percent;}
+    public double getPercent() {
+        return percent;
+    }
 
-    public double getPercentIls(){return percentIls;}
+    public double getPercentIls() {
+        return percentIls;
+    }
 
-    public int getIterationsIls(){return iterationsIls;}
+    public int getIterationsIls() {
+        return iterationsIls;
+    }
 
-    public double getProbabilitySet(){return probabilitySet;}
+    public double getProbabilitySet() {
+        return probabilitySet;
+    }
 }
-
-

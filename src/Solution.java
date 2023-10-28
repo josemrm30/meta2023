@@ -4,15 +4,14 @@ import java.util.Arrays;
  * @author pedro
  */
 public class Solution {
-
     private int cost;
-    private int[] solutionList;
+    private final int[] solutionList;
 
     public Solution(int size) {
         solutionList = new int[size];
     }
 
-    public void setCost(int cost){
+    public void setCost(int cost) {
         this.cost = cost;
     }
 
@@ -24,10 +23,8 @@ public class Solution {
         return solutionList;
     }
 
-    public void setSolutionList(int[] solution){
-        for (int i = 0; i < solution.length; i++) {
-            solutionList[i] = solution[i];
-        }
+    public void setSolutionList(int[] solution) {
+        System.arraycopy(solution, 0, solutionList, 0, solution.length);
     }
 
     public Solution(Solution other) {

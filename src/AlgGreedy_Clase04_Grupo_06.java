@@ -1,9 +1,9 @@
-public class Greedy {
+public class AlgGreedy_Clase04_Grupo_06 {
     private final int[] distances;
     private final int[] flows;
     private final int size;
 
-    public Greedy(int size) {
+    public AlgGreedy_Clase04_Grupo_06(int size) {
         this.size = size;
         distances = new int[size];
         flows = new int[size];

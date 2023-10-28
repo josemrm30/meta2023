@@ -21,7 +21,7 @@ public class Problem {
         matrixSize = Integer.parseInt(b.readLine());
         flowMatrix = new int[matrixSize][matrixSize];
         distMatrix = new int[matrixSize][matrixSize];
-        line = b.readLine();
+        b.readLine();
         for (int i = 0; i < matrixSize; i++) {
             line = b.readLine();
             String[] splited = line.split(" ");
@@ -34,7 +34,7 @@ public class Problem {
                 }
             }
         }
-        line = b.readLine();
+        b.readLine();
         for (int i = 0; i < matrixSize; i++) {
             line = b.readLine();
             String[] splited = line.split(" ");
@@ -58,12 +58,13 @@ public class Problem {
     }
 
     public int[][] getFlowMatrix() {
-           return flowMatrix;
+        return flowMatrix;
     }
+
     public int[][] getDistMatrix() {
         return distMatrix;
     }
-  
+
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder("Data filename: " + name + "\n" + "FlowMatrix:" + "\n");
