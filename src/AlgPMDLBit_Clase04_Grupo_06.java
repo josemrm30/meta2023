@@ -3,7 +3,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LocalSearch {
+public class AlgPMDLBit_Clase04_Grupo_06 {
 
     private final Solution actualSolution;
     private final Random rand;
@@ -11,7 +11,7 @@ public class LocalSearch {
     private final Problem problem;
     private final int iterations;
 
-    public LocalSearch(Problem problem, int iterations, Long seed, Logger log) {
+    public AlgPMDLBit_Clase04_Grupo_06(Problem problem, int iterations, Long seed, Logger log) {
         this.problem = problem;
         this.iterations = iterations;
         this.log = log;
@@ -20,7 +20,7 @@ public class LocalSearch {
     }
 
     public Solution getInitialSolution(Problem problem) {
-        Greedy greedy = new Greedy(problem.getMatrixSize());
+        AlgGreedy_Clase04_Grupo_06 greedy = new AlgGreedy_Clase04_Grupo_06(problem.getMatrixSize());
         return greedy.SoluGreedy(problem.getFlowMatrix(), problem.getDistMatrix());
     }
 
@@ -47,27 +47,26 @@ public class LocalSearch {
             Arrays.fill(dlb, 0);
 
             improvement = false;
-            int contadorI = 0;
-            for (int i = pos; i <= size && contadorI < size; i++) {
+            int countI = 0;
+            for (int i = pos; i <= size && countI < size; i++) {
                 if (i == size) {
                     i = 0;
                 }
-                contadorI++;
-                // TODO: preguntar a cristobal sobre como reinicializar desde el principio y sobre el coste extra de los logs
+                countI++;
                 if (dlb[i] == 0) {
-                    int contadorJ = 0;
-                    for (int j = i + 1; j <= size && contadorJ < size; j++) {
+                    int countJ = 0;
+                    for (int j = i + 1; j <= size && countJ < size; j++) {
                         if (j == size) {
                             j = 0;
                         }
-                        contadorJ++;
-                        if (i != j){
+                        countJ++;
+                        if (i != j) {
                             log.log(Level.INFO, "Actual solution list = " + Arrays.toString(solutionList));
                             int[] newSolution = swapSolution(solutionList, i, j);
                             log.log(Level.INFO, "Swapped solution list in positions i = " + i + " j = " + j + " " + Arrays.toString(newSolution));
                             int newCost = Factorization2Opt(flow, dist, size, newSolution, actualCost, i, j);
                             log.log(Level.INFO, "Swapped solution cost = " + newCost);
-                            log.log(Level.INFO, "i: "+ i + " j: " + j + " contI: " + contadorI + " contJ: " + contadorJ + " iteration: " + iter + " dlb" + Arrays.toString(dlb) + " Cost: " + actualCost + " New cost: " + newCost);
+                            log.log(Level.INFO, "i: " + i + " j: " + j + " countI: " + countI + " countJ: " + countJ + " iteration: " + iter + " dlb" + Arrays.toString(dlb) + " Cost: " + actualCost + " New cost: " + newCost);
 
                             if (newCost < actualCost) {
                                 log.log(Level.INFO, "Iteration = " + iter);
@@ -83,9 +82,9 @@ public class LocalSearch {
                                 log.log(Level.INFO, "Rejected swapped solution");
                                 dlb[i] = 1;
                             }
-                                if (j == size - 1) {
-                                    j = -1;
-                                }
+                            if (j == size - 1) {
+                                j = -1;
+                            }
                         }
                     }
                     if (i == size - 1) {
@@ -97,15 +96,14 @@ public class LocalSearch {
         return actualCost;
     }
 
-
     //factorization function  with 2 elements
-    private int Factorization2Opt(int[][] flow, int[][] loc, int tam, int[] actualSolution, int ActualCost, int r, int s) {
-        for (int k = 0; k < tam; k++) {
+    private int Factorization2Opt(int[][] flow, int[][] loc, int size, int[] actualSolution, int ActualCost, int r, int s) {
+        for (int k = 0; k < size; k++) {
             if (k != r && k != s) {
-                ActualCost += flow[r][k] * (loc[actualSolution[s] - 1][actualSolution[k] - 1] - loc[actualSolution[r] - 1][actualSolution[k] - 1]) +
-                        (flow[s][k] * (loc[actualSolution[r] - 1][actualSolution[k] - 1] - loc[actualSolution[s] - 1][actualSolution[k] - 1])) +
-                        (flow[k][r] * (loc[actualSolution[k] - 1][actualSolution[s] - 1] - loc[actualSolution[k] - 1][actualSolution[r] - 1])) +
-                        (flow[k][s] * (loc[actualSolution[k] - 1][actualSolution[r] - 1] - loc[actualSolution[k] - 1][actualSolution[s] - 1]));
+                ActualCost += flow[r][k] * (loc[actualSolution[s]][actualSolution[k]] - loc[actualSolution[r]][actualSolution[k]]) +
+                        (flow[s][k] * (loc[actualSolution[r]][actualSolution[k]] - loc[actualSolution[s]][actualSolution[k]])) +
+                        (flow[k][r] * (loc[actualSolution[k]][actualSolution[s]] - loc[actualSolution[k]][actualSolution[r]])) +
+                        (flow[k][s] * (loc[actualSolution[k]][actualSolution[r]] - loc[actualSolution[k]][actualSolution[s]]));
             }
         }
         return ActualCost;

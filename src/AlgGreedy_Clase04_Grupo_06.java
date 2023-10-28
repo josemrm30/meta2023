@@ -1,9 +1,9 @@
-public class Greedy {
+public class AlgGreedy_Clase04_Grupo_06 {
     private final int[] distances;
     private final int[] flows;
     private final int size;
 
-    public Greedy(int size) {
+    public AlgGreedy_Clase04_Grupo_06(int size) {
         this.size = size;
         distances = new int[size];
         flows = new int[size];
@@ -58,7 +58,7 @@ public class Greedy {
         for (int i = 0; i < size; i++) {
             location = minorDist(distances, mark1);
             department = majorFlow(flows, mark2);
-            sol.getSolutionList()[department] = location + 1;
+            sol.getSolutionList()[department] = location;
         }
         sol.setCost(this.Cost(flow, distance, sol.getSolutionList()));
 
@@ -70,7 +70,7 @@ public class Greedy {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (i != j) {
-                    cost += flow[i][j] * loc[sol[i]-1][sol[j]-1];
+                    cost += flow[i][j] * loc[sol[i]][sol[j]];
                 }
             }
         }

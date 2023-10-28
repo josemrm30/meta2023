@@ -1,5 +1,12 @@
 Files=ford01.dat ford02.dat ford03.dat ford04.dat
 Seeds=26512592 51262592 26255192 92512526 25265192
-Algorithms=PMDLBit
+Algorithms=PMDLBit TabuVie ILS
 ConsoleLog=False
-Iterations=1000
+Iterations=100
+TabuProb=50
+TabuTenure=7
+Blockage=50
+ProbabilitySet=0.5
+Percent=0.25
+PercentIls=0.50
+IterationsIls=30

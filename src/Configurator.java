@@ -10,7 +10,14 @@ public class Configurator {
     ArrayList<String> algorithms;
     ArrayList<Long> seeds;
     ArrayList<String> solutions;
-    int iterations;
+    private int iterations;
+    private int tabuProb;
+    private int tabuTenure;
+    private int Blockage;
+    private double percent;
+    private double percentIls;
+    private int iterationsIls;
+    private double probabilitySet;
     Boolean consoleLog;
 
     public Configurator(String path) throws IOException {
@@ -48,11 +55,31 @@ public class Configurator {
                 case "ConsoleLog":
                     consoleLog = Boolean.parseBoolean(splited[1]);
                     break;
+                case "TabuProb":
+                    tabuProb = Integer.parseInt(splited[1]);
+                    break;
+                case "TabuTenure":
+                    tabuTenure = Integer.parseInt(splited[1]);
+                    break;
+                case "Blockage":
+                    Blockage = Integer.parseInt(splited[1]);
+                    break;
+                case "Percent":
+                    percent = Double.parseDouble(splited[1]);
+                    break;
+                case "PercentIls":
+                    percentIls = Double.parseDouble(splited[1]);
+                    break;
+                case "IterationsIls":
+                    iterationsIls = Integer.parseInt(splited[1]);
+                    break;
+                case "ProbabilitySet":
+                    probabilitySet = Double.parseDouble(splited[1]);
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + splited[0]);
             }
         }
-
     }
 
     public ArrayList<String> getFiles() {
@@ -70,6 +97,32 @@ public class Configurator {
     public int getIterations() {
         return iterations;
     }
+
+    public int getTabuprob() {
+        return tabuProb;
+    }
+
+    public int getTabuTenure() {
+        return tabuTenure;
+    }
+
+    public int getBlockage() {
+        return Blockage;
+    }
+
+    public double getPercent() {
+        return percent;
+    }
+
+    public double getPercentIls() {
+        return percentIls;
+    }
+
+    public int getIterationsIls() {
+        return iterationsIls;
+    }
+
+    public double getProbabilitySet() {
+        return probabilitySet;
+    }
 }
-
-
