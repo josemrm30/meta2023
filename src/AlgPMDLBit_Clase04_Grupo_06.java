@@ -82,13 +82,7 @@ public class AlgPMDLBit_Clase04_Grupo_06 {
                                 log.log(Level.INFO, "Rejected swapped solution");
                                 dlb[i] = 1;
                             }
-                            if (j == size - 1) {
-                                j = -1;
-                            }
                         }
-                    }
-                    if (i == size - 1) {
-                        i = -1;
                     }
                 }
             }

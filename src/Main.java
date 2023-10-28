@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -22,6 +24,10 @@ public class Main {
     public static void runAlgorithms() throws IOException, InterruptedException {
         int num = config.getAlgorithms().size() * config.getFiles().size() * config.getSeeds().size();
         CountDownLatch cdl = new CountDownLatch(num);
+
+        if(!Files.isDirectory(Path.of("./log")))
+            Files.createDirectory(Path.of("./log"));
+
         for (int i = 0; i < config.getAlgorithms().size(); i++) {
             for (Problem problem : problems) {
                 for (int k = 0; k < config.getSeeds().size(); k++) {
